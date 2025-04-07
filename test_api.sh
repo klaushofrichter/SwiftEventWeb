@@ -15,7 +15,6 @@ echo "password: ${VITE_SWIFT_SENSORS_PASSWORD:0:5}..."
 echo "url: ${VITE_SWIFT_SENSORS_API_URL}"
 echo "api-key: ${VITE_SWIFT_SENSORS_API_KEY:0:5}..."
 
-exit
 #
 # Make the API call
 curl -v -X POST "${VITE_SWIFT_SENSORS_API_URL}" \

@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
-import { sensorService, notificationService } from '../services/api';
+import { sensorService, notificationService, deviceService } from '../services/api';
 import { useAuthStore } from './auth';
 
 export const useDataStore = defineStore('data', {
   state: () => ({
     sensors: [],
+    devices: [],
     notifications: [],
     selectedNotification: null,
     loading: false,
@@ -59,6 +60,23 @@ export const useDataStore = defineStore('data', {
 
     clearSelectedNotification() {
       this.selectedNotification = null;
+    },
+
+    async fetchDevices() {
+      const authStore = useAuthStore();
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await deviceService.getDevices(authStore.accountId);
+        console.log("Devices response:", response);
+        this.devices = Array.isArray(response) ? response : [];
+        console.log("Stored devices:", this.devices);
+      } catch (error) {
+        this.error = error.message || 'Failed to fetch devices';
+        throw error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }); 

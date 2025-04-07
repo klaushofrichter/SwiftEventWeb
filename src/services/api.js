@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../stores/auth';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
@@ -7,6 +8,25 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
+// Add request interceptor to include bearer token for all requests except sign-in
+api.interceptors.request.use(
+  (config) => {
+    // Skip adding token for sign-in request
+    if (config.url === '/sign-in') {
+      return config;
+    }
+
+    const authStore = useAuthStore();
+    if (authStore.token) {
+      config.headers.Authorization = `Bearer ${authStore.token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const authService = {
   login: async (email, password) => {
@@ -25,8 +45,10 @@ export const authService = {
 
 export const accountService = {
   getAccountInfo: async (accountId) => {
+    console.log("getAccountInfo:", accountId);
     try {
       const response = await api.get(`/accounts/${accountId}`);
+      console.log("getAccountInfo:", response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -36,8 +58,10 @@ export const accountService = {
 
 export const sensorService = {
   getSensors: async (accountId) => {
+    console.log("getSensors:", accountId);
     try {
       const response = await api.get(`/accounts/${accountId}/sensors/visible`);
+      console.log("getSensors:", response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -58,6 +82,19 @@ export const notificationService = {
   getNotificationDetails: async (accountId, notificationId) => {
     try {
       const response = await api.get(`/accounts/${accountId}/notifications/${notificationId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  }
+};
+
+export const deviceService = {
+  getDevices: async (accountId) => {
+    console.log("getDevices:", accountId);
+    try {
+      const response = await api.get(`/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
+      console.log("getDevices:", response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;

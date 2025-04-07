@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: import.meta.env.VITE_SWIFT_SENSORS_API_HOST,
+        target: 'https://api.swiftsensors.net',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

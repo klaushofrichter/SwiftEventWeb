@@ -1,12 +1,32 @@
 <template>
   <div class="space-y-6">
     <div class="bg-white shadow rounded-lg p-6">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">Sensors</h2>
-      <div v-if="loading" class="flex justify-center">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Devices</h2>
+      <div v-if="devicesLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
-      <div v-else-if="error" class="text-red-500 text-center">
-        {{ error }}
+      <div v-else-if="devicesError" class="text-red-500 text-center">
+        {{ devicesError }}
+      </div>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div v-for="device in devices" :key="device.id" class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-medium text-gray-900">{{ device.name }}</h3>
+          <p class="text-sm text-gray-500">Manufacturer: {{ device.manufacturer }}</p>
+          <p class="text-sm text-gray-500">Model: {{ device.model }}</p>
+          <p class="text-sm text-gray-700 mt-2">Last Seen: {{ formatDate(device.lastContactTime) }}</p>
+          <p class="text-sm text-gray-700">Battery: {{ device.batteryLevel }}%</p>
+          <p class="text-sm text-gray-700">Signal: {{ device.signalStrength }} dBm</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Sensors</h2>
+      <div v-if="sensorsLoading" class="flex justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+      <div v-else-if="sensorsError" class="text-red-500 text-center">
+        {{ sensorsError }}
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="sensor in sensors" :key="sensor[0]" class="bg-gray-50 p-4 rounded-lg">
@@ -27,11 +47,11 @@
           Refresh
         </button>
       </div>
-      <div v-if="loading" class="flex justify-center">
+      <div v-if="notificationsLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
-      <div v-else-if="error" class="text-red-500 text-center">
-        {{ error }}
+      <div v-else-if="notificationsError" class="text-red-500 text-center">
+        {{ notificationsError }}
       </div>
       <div v-else class="space-y-4">
         <div
@@ -96,12 +116,17 @@ import { onMounted, ref } from 'vue';
 import { useDataStore } from '../stores/data';
 
 const dataStore = useDataStore();
-const loading = ref(false);
-const error = ref(null);
+const devicesLoading = ref(false);
+const sensorsLoading = ref(false);
+const notificationsLoading = ref(false);
+const devicesError = ref(null);
+const sensorsError = ref(null);
+const notificationsError = ref(null);
 const selectedNotification = ref(null);
 
 const sensors = ref([]);
 const notifications = ref([]);
+const devices = ref([]);
 
 const getUnit = (unitId) => {
   const units = {
@@ -112,33 +137,62 @@ const getUnit = (unitId) => {
   return units[unitId] || '';
 };
 
-const fetchData = async () => {
-  loading.value = true;
-  error.value = null;
-  try {
-    await Promise.all([
-      dataStore.fetchSensors(),
-      dataStore.fetchNotifications()
-    ]);
-    sensors.value = dataStore.sensors;
-    notifications.value = dataStore.notifications;
-  } catch (err) {
-    error.value = err.message || 'Failed to fetch data';
-  } finally {
-    loading.value = false;
-  }
+const formatDate = (timestamp) => {
+  if (!timestamp) return 'Never';
+  return new Date(timestamp * 1000).toLocaleString();
 };
 
-const refreshNotifications = async () => {
-  loading.value = true;
-  error.value = null;
+const fetchData = async () => {
+  // Reset all errors
+  devicesError.value = null;
+  sensorsError.value = null;
+  notificationsError.value = null;
+  
+  // Fetch devices
+  devicesLoading.value = true;
+  try {
+    await dataStore.fetchDevices();
+    devices.value = dataStore.devices;
+    console.log("Dashboard devices:", devices.value);
+  } catch (err) {
+    devicesError.value = err.message || 'Failed to fetch devices';
+  } finally {
+    devicesLoading.value = false;
+  }
+
+  // Fetch sensors
+  sensorsLoading.value = true;
+  try {
+    await dataStore.fetchSensors();
+    sensors.value = dataStore.sensors;
+  } catch (err) {
+    sensorsError.value = err.message || 'Failed to fetch sensors';
+  } finally {
+    sensorsLoading.value = false;
+  }
+
+  // Fetch notifications
+  notificationsLoading.value = true;
   try {
     await dataStore.fetchNotifications();
     notifications.value = dataStore.notifications;
   } catch (err) {
-    error.value = err.message || 'Failed to refresh notifications';
+    notificationsError.value = err.message || 'Failed to fetch notifications';
   } finally {
-    loading.value = false;
+    notificationsLoading.value = false;
+  }
+};
+
+const refreshNotifications = async () => {
+  notificationsLoading.value = true;
+  notificationsError.value = null;
+  try {
+    await dataStore.fetchNotifications();
+    notifications.value = dataStore.notifications;
+  } catch (err) {
+    notificationsError.value = err.message || 'Failed to refresh notifications';
+  } finally {
+    notificationsLoading.value = false;
   }
 };
 
@@ -147,7 +201,7 @@ const showNotificationDetails = async (notificationId) => {
     await dataStore.fetchNotificationDetails(notificationId);
     selectedNotification.value = dataStore.selectedNotification;
   } catch (err) {
-    error.value = err.message || 'Failed to fetch notification details';
+    notificationsError.value = err.message || 'Failed to fetch notification details';
   }
 };
 
