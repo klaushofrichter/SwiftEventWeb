@@ -1,0 +1,3 @@
+@Swift Sensors API Documentation I want to build a vue3 component application using node 20 that allows a user to log into SwiftSensors services with user name and password. I have an API Key available, it should be stored in .env.  
+After login, the application should show details about the account, such as a list of sensors that are available, and a list of recent notifications. There should eb a button to refresh the notification data. When clicking on a notification a modal windo should show details of that notification. 
+Make the app visually pleasing and do not use typescript. 
