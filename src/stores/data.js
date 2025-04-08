@@ -73,9 +73,23 @@ export const useDataStore = defineStore('data', {
       this.loading = true;
       this.error = null;
       try {
+        console.log("Fetching notifications for account:", authStore.accountId);
         const response = await notificationService.getNotifications(authStore.accountId);
-        this.notifications = response;
+        console.log("Raw notifications response:", response);
+        
+        // Get the first key from the response object (which should be the accountId)
+        const accountKey = Object.keys(response)[0];
+        console.log("Found account key:", accountKey);
+        
+        if (response[accountKey] && Array.isArray(response[accountKey])) {
+          this.notifications = response[accountKey];
+          console.log("Successfully stored notifications:", this.notifications);
+        } else {
+          console.warn("Invalid notification data format:", response);
+          this.notifications = [];
+        }
       } catch (error) {
+        console.error("Error fetching notifications:", error);
         this.error = error.message || 'Failed to fetch notifications';
         throw error;
       } finally {
@@ -88,9 +102,12 @@ export const useDataStore = defineStore('data', {
       this.loading = true;
       this.error = null;
       try {
+        console.log("Fetching notification details for ID:", notificationId);
         const response = await notificationService.getNotificationDetails(authStore.accountId, notificationId);
+        console.log("Notification details response:", response);
         this.selectedNotification = response;
       } catch (error) {
+        console.error("Error fetching notification details:", error);
         this.error = error.message || 'Failed to fetch notification details';
         throw error;
       } finally {

@@ -98,15 +98,25 @@
       <div v-else-if="notificationsError" class="text-red-500 text-center">
         {{ notificationsError }}
       </div>
-      <div v-else class="space-y-4">
+      <div v-else class="space-y-3">
         <div
           v-for="notification in notifications"
           :key="notification[0]"
           @click="showNotificationDetails(notification[0])"
-          class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100"
+          class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 border border-gray-200"
         >
-          <h3 class="font-medium text-gray-900">{{ notification[1] }}</h3>
-          <p class="text-sm text-gray-500">Status: {{ notification[4] ? 'Enabled' : 'Disabled' }}</p>
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-medium text-gray-900">{{ notification[1] }}</h3>
+              <p class="text-sm text-gray-500 mt-1">ID: {{ notification[0] }}</p>
+            </div>
+            <span 
+              class="px-2 py-1 text-xs rounded-full"
+              :class="notification[4] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+            >
+              {{ notification[4] ? 'Enabled' : 'Disabled' }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -254,7 +264,17 @@ const fetchData = async () => {
   try {
     await dataStore.fetchNotifications();
     notifications.value = dataStore.notifications;
+    console.log("Dashboard notifications:", {
+      raw: notifications.value,
+      formatted: notifications.value.map(n => ({
+        id: n[0],
+        name: n[1],
+        enabled: n[4],
+        // Add any other relevant fields
+      }))
+    });
   } catch (err) {
+    console.error("Error fetching notifications:", err);
     notificationsError.value = err.message || 'Failed to fetch notifications';
   } finally {
     notificationsLoading.value = false;
@@ -276,9 +296,12 @@ const refreshNotifications = async () => {
 
 const showNotificationDetails = async (notificationId) => {
   try {
+    console.log("Fetching details for notification:", notificationId);
     await dataStore.fetchNotificationDetails(notificationId);
     selectedNotification.value = dataStore.selectedNotification;
+    console.log("Selected notification details:", selectedNotification.value);
   } catch (err) {
+    console.error("Error fetching notification details:", err);
     notificationsError.value = err.message || 'Failed to fetch notification details';
   }
 };

@@ -72,18 +72,24 @@ export const sensorService = {
 export const notificationService = {
   getNotifications: async (accountId) => {
     try {
+      console.log("API: Getting notifications for account:", accountId);
       const response = await api.get(`/v2/accounts/${accountId}/notifications`);
+      console.log("API: Notifications response data:", response.data);
       return response.data;
     } catch (error) {
+      console.error("API: Error getting notifications:", error.response?.data || error);
       throw error.response?.data || error;
     }
   },
   
   getNotificationDetails: async (accountId, notificationId) => {
     try {
+      console.log("API: Getting notification details:", { accountId, notificationId });
       const response = await api.get(`/v2/accounts/${accountId}/notifications/${notificationId}`);
+      console.log("API: Notification details response data:", response.data);
       return response.data;
     } catch (error) {
+      console.error("API: Error getting notification details:", error.response?.data || error);
       throw error.response?.data || error;
     }
   }
