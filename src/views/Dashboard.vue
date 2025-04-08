@@ -1,5 +1,23 @@
 <template>
   <div class="space-y-6">
+    <!-- Account Information Section -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Account Information</h2>
+      <div v-if="accountLoading" class="flex justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+      <div v-else-if="accountError" class="text-red-500 text-center">
+        {{ accountError }}
+      </div>
+      <div v-else class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="font-medium text-gray-900">{{ accountInfo?.accountName }}</h3>
+        <div class="mt-2 space-y-1">
+          <p class="text-sm text-gray-500">Created: {{ formatDate(accountInfo?.creationTime) }}</p>
+          <p class="text-sm text-gray-500">Time Zone: {{ accountInfo?.timeZone?.timeZoneId }} ({{ accountInfo?.timeZone?.offsetDisplay }})</p>
+        </div>
+      </div>
+    </div>
+
     <div class="bg-white shadow rounded-lg p-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Devices</h2>
       <div v-if="devicesLoading" class="flex justify-center">
@@ -28,11 +46,38 @@
       <div v-else-if="sensorsError" class="text-red-500 text-center">
         {{ sensorsError }}
       </div>
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="sensor in sensors" :key="sensor[0]" class="bg-gray-50 p-4 rounded-lg">
-          <h3 class="font-medium text-gray-900">{{ sensor[1] }}</h3>
-          <p class="text-sm text-gray-500">{{ sensor[2] }}</p>
-          <p class="text-sm text-gray-700 mt-2">Value: {{ sensor[6] }} {{ getUnit(sensor[3]) }}</p>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div v-for="sensor in sensors" :key="sensor[0]" 
+          class="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-medium text-gray-900">{{ sensor[1] }}</h3>
+              <p class="text-sm text-gray-500">{{ sensor[2] }}</p>
+            </div>
+            <span 
+              class="px-2 py-1 text-xs rounded-full"
+              :class="sensor[9] ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'"
+            >
+              {{ sensor[9] ? 'Alert' : 'Normal' }}
+            </span>
+          </div>
+          <div class="mt-4">
+            <div class="flex items-baseline">
+              <span class="text-2xl font-semibold text-gray-700">{{ formatSensorValue(sensor[6]) }}</span>
+              <span class="ml-1 text-gray-500">{{ getUnit(sensor[3]) }}</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Updated: {{ formatDate(sensor[4]) }}</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-gray-200">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">Interval:</span>
+              <span class="text-gray-700">{{ sensor[5] }}s</span>
+            </div>
+            <div class="flex justify-between text-sm mt-1">
+              <span class="text-gray-500">Status:</span>
+              <span class="text-gray-700">{{ sensor[7] === 1 ? 'Active' : 'Inactive' }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -112,10 +157,16 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useDataStore } from '../stores/data';
+import { useAuthStore } from '../stores/auth';
 
 const dataStore = useDataStore();
+const authStore = useAuthStore();
+
+const accountLoading = ref(false);
+const accountError = ref(null);
+const accountInfo = computed(() => dataStore.accountInfo);
 const devicesLoading = ref(false);
 const sensorsLoading = ref(false);
 const notificationsLoading = ref(false);
@@ -124,15 +175,16 @@ const sensorsError = ref(null);
 const notificationsError = ref(null);
 const selectedNotification = ref(null);
 
-const sensors = ref([]);
-const notifications = ref([]);
 const devices = ref([]);
+const notifications = ref([]);
+const sensors = ref([]);
 
 const getUnit = (unitId) => {
   const units = {
-    1: '°C',
-    4: '%',
-    // Add more unit mappings as needed
+    1: '°C',  // Dew Point
+    2: '°C',  // Temperature
+    4: '%',   // Humidity
+    17: '',   // Door
   };
   return units[unitId] || '';
 };
@@ -142,12 +194,36 @@ const formatDate = (timestamp) => {
   return new Date(timestamp * 1000).toLocaleString();
 };
 
+const formatSensorValue = (value) => {
+  if (typeof value === 'number' && !Number.isInteger(value)) {
+    return value.toFixed(2);
+  }
+  // For door sensors
+  if (value === 0 || value === 1) {
+    return value === 1 ? 'Open' : 'Closed';
+  }
+  return value;
+};
+
 const fetchData = async () => {
   // Reset all errors
+  accountError.value = null;
   devicesError.value = null;
   sensorsError.value = null;
   notificationsError.value = null;
   
+  // Fetch account information
+  accountLoading.value = true;
+  try {
+    await dataStore.fetchAccountInfo();
+    console.log("Dashboard account info:", dataStore.accountInfo);
+  } catch (err) {
+    console.error("Error fetching account info:", err);
+    accountError.value = err.message || 'Failed to fetch account information';
+  } finally {
+    accountLoading.value = false;
+  }
+
   // Fetch devices
   devicesLoading.value = true;
   try {
@@ -165,7 +241,9 @@ const fetchData = async () => {
   try {
     await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
+    console.log("Dashboard sensors:", sensors.value);
   } catch (err) {
+    console.error("Error fetching sensors:", err);
     sensorsError.value = err.message || 'Failed to fetch sensors';
   } finally {
     sensorsLoading.value = false;

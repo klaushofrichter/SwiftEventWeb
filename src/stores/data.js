@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { sensorService, notificationService, deviceService } from '../services/api';
+import { sensorService, notificationService, deviceService, accountService } from '../services/api';
 import { useAuthStore } from './auth';
 
 export const useDataStore = defineStore('data', {
@@ -8,19 +8,59 @@ export const useDataStore = defineStore('data', {
     devices: [],
     notifications: [],
     selectedNotification: null,
+    accountInfo: null,
     loading: false,
     error: null
   }),
 
+  getters: {
+    getAccountInfo: (state) => state.accountInfo,
+  },
+
   actions: {
+    async fetchAccountInfo() {
+      const authStore = useAuthStore();
+      if (!authStore.accountId) {
+        throw new Error('No account ID available');
+      }
+      
+      this.loading = true;
+      this.error = null;
+      try {
+        console.log("Fetching account info for accountId:", authStore.accountId);
+        const response = await accountService.getAccountInfo(authStore.accountId);
+        console.log("Account info response:", response);
+        this.accountInfo = response;
+      } catch (error) {
+        console.error("Error fetching account info:", error);
+        this.error = error.message || 'Failed to fetch account information';
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async fetchSensors() {
       const authStore = useAuthStore();
       this.loading = true;
       this.error = null;
       try {
         const response = await sensorService.getSensors(authStore.accountId);
-        this.sensors = response;
+        console.log("Raw sensors response:", response);
+        
+        // Get the first key from the response object (which should be the accountId)
+        const accountKey = Object.keys(response)[0];
+        console.log("Found account key:", accountKey);
+        
+        if (response[accountKey] && Array.isArray(response[accountKey])) {
+          this.sensors = response[accountKey];
+          console.log("Successfully stored sensors:", this.sensors);
+        } else {
+          console.warn("Invalid sensor data format:", response);
+          this.sensors = [];
+        }
       } catch (error) {
+        console.error("Error fetching sensors:", error);
         this.error = error.message || 'Failed to fetch sensors';
         throw error;
       } finally {

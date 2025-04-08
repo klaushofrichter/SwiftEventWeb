@@ -47,7 +47,7 @@ export const accountService = {
   getAccountInfo: async (accountId) => {
     console.log("getAccountInfo:", accountId);
     try {
-      const response = await api.get(`/v2/accounts/${accountId}`);
+      const response = await api.get(`/v1/accounts/${accountId}`);
       console.log("getAccountInfo:", response.data);
       return response.data;
     } catch (error) {
