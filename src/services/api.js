@@ -13,7 +13,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Skip adding token for sign-in request
-    if (config.url === '/sign-in') {
+    if (config.url === '/v1/sign-in') {
       return config;
     }
 
@@ -31,7 +31,7 @@ api.interceptors.request.use(
 export const authService = {
   login: async (email, password) => {
     try {
-      const response = await api.post('/sign-in', {
+      const response = await api.post('/v1/sign-in', {
         "email": email,
         "password": password
       });
@@ -47,7 +47,7 @@ export const accountService = {
   getAccountInfo: async (accountId) => {
     console.log("getAccountInfo:", accountId);
     try {
-      const response = await api.get(`/accounts/${accountId}`);
+      const response = await api.get(`/v2/accounts/${accountId}`);
       console.log("getAccountInfo:", response.data);
       return response.data;
     } catch (error) {
@@ -60,7 +60,7 @@ export const sensorService = {
   getSensors: async (accountId) => {
     console.log("getSensors:", accountId);
     try {
-      const response = await api.get(`/accounts/${accountId}/sensors/visible`);
+      const response = await api.get(`/v2/accounts/${accountId}/sensors/visible`);
       console.log("getSensors:", response.data);
       return response.data;
     } catch (error) {
@@ -72,7 +72,7 @@ export const sensorService = {
 export const notificationService = {
   getNotifications: async (accountId) => {
     try {
-      const response = await api.get(`/accounts/${accountId}/notifications`);
+      const response = await api.get(`/v2/accounts/${accountId}/notifications`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -81,7 +81,7 @@ export const notificationService = {
   
   getNotificationDetails: async (accountId, notificationId) => {
     try {
-      const response = await api.get(`/accounts/${accountId}/notifications/${notificationId}`);
+      const response = await api.get(`/v2/accounts/${accountId}/notifications/${notificationId}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -93,7 +93,7 @@ export const deviceService = {
   getDevices: async (accountId) => {
     console.log("getDevices:", accountId);
     try {
-      const response = await api.get(`/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
+      const response = await api.get(`/v1/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
       console.log("getDevices:", response.data);
       return response.data;
     } catch (error) {
