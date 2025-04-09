@@ -85,12 +85,6 @@
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-900">Notifications</h2>
-        <button
-          @click="refreshNotifications"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          Refresh
-        </button>
       </div>
       <div v-if="notificationsLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -253,7 +247,6 @@ const fetchData = async () => {
     sensors.value = dataStore.sensors;
     console.log("Dashboard sensors:", sensors.value);
   } catch (err) {
-    console.error("Error fetching sensors:", err);
     sensorsError.value = err.message || 'Failed to fetch sensors';
   } finally {
     sensorsLoading.value = false;
@@ -264,31 +257,9 @@ const fetchData = async () => {
   try {
     await dataStore.fetchNotifications();
     notifications.value = dataStore.notifications;
-    console.log("Dashboard notifications:", {
-      raw: notifications.value,
-      formatted: notifications.value.map(n => ({
-        id: n[0],
-        name: n[1],
-        enabled: n[4],
-        // Add any other relevant fields
-      }))
-    });
+    console.log("Dashboard notifications:", notifications.value);
   } catch (err) {
-    console.error("Error fetching notifications:", err);
     notificationsError.value = err.message || 'Failed to fetch notifications';
-  } finally {
-    notificationsLoading.value = false;
-  }
-};
-
-const refreshNotifications = async () => {
-  notificationsLoading.value = true;
-  notificationsError.value = null;
-  try {
-    await dataStore.fetchNotifications();
-    notifications.value = dataStore.notifications;
-  } catch (err) {
-    notificationsError.value = err.message || 'Failed to refresh notifications';
   } finally {
     notificationsLoading.value = false;
   }
@@ -296,12 +267,9 @@ const refreshNotifications = async () => {
 
 const showNotificationDetails = async (notificationId) => {
   try {
-    console.log("Fetching details for notification:", notificationId);
     await dataStore.fetchNotificationDetails(notificationId);
     selectedNotification.value = dataStore.selectedNotification;
-    console.log("Selected notification details:", selectedNotification.value);
   } catch (err) {
-    console.error("Error fetching notification details:", err);
     notificationsError.value = err.message || 'Failed to fetch notification details';
   }
 };
