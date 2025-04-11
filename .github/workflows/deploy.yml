@@ -29,6 +29,8 @@ jobs:
           VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
           VITE_SWIFT_SENSORS_API_HOST: ${{ secrets.VITE_SWIFT_SENSORS_API_HOST }}
           VITE_SWIFT_SENSORS_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROXY_API_URL }}
+          VITE_SWIFT_SENSORS_USER: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
+          VITE_SWIFT_SENSORS_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

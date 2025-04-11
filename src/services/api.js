@@ -1,8 +1,14 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
+// In production (GitHub Pages), we use the direct API host
+// In development, we use the proxy URL
+const baseURL = import.meta.env.PROD 
+  ? import.meta.env.VITE_SWIFT_SENSORS_API_HOST
+  : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
+  baseURL,
   headers: {
     'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
     'Content-Type': 'application/json'
