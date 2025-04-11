@@ -25,6 +25,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
+          VITE_SWIFT_SENSORS_API_HOST: ${{ secrets.VITE_SWIFT_SENSORS_API_HOST }}
+          VITE_SWIFT_SENSORS_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROXY_API_URL }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
