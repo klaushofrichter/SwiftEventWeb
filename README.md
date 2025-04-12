@@ -95,7 +95,7 @@ To start development:
 
 ## Building for Production
 
-The branch "prod" is used for deployments. 
+The branch `prod` is used for deployments. 
 
 To create a production build:
 ```bash
