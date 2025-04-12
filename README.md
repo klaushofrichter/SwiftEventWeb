@@ -1,6 +1,7 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for monitoring and managing SwiftSensors devices, sensors, and notifications.
+A Vue 3 web application for monitoring and managing SwiftSensors devices, sensors, and notifications. 
+This application was build using Cursor.com.
 
 ## Features
 
@@ -8,7 +9,7 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
   - View account details
   - Display account timezone and creation time
 
-- **Device Management**
+- **Device Viewing**
   - View all devices associated with the account
   - Monitor device status, battery levels, and signal strength
   - Track last contact time for each device
@@ -16,14 +17,14 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
 - **Sensor Monitoring**
   - Real-time display of sensor data
   - Support for multiple sensor types:
-    - Temperature sensors (°C)
+    - Temperature sensors (°C of F)
     - Humidity sensors (%)
     - Door sensors (Open/Closed)
-    - Dew Point sensors (°C)
+    - Dew Point sensors (°C of F)
   - Status indicators and alert states
   - Update intervals and activity status
 
-- **Notification Management**
+- **Notification Viewing**
   - View all configured notifications
   - Enable/Disable status indicators
   - Detailed notification information in modal view
@@ -39,6 +40,11 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
 - Tailwind CSS for styling
 - Axios for API communication
 
+## Limitations
+
+- There is no realtime event handling or timeseries display. The authentication may expire, it is needed to re-login if that happens. The only way to update values shown is the reload the app.
+- The Application is not actively maintained. 
+
 ## Prerequisites
 
 - Node.js (v14 or higher)
@@ -49,7 +55,7 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
 
 1. Clone the repository:
    ```bash
-   git clone [repository-url]
+   git clone git@github.com:klaushofrichter/SwiftEventWeb.git
    cd SwiftEventWeb
    ```
 
@@ -68,7 +74,7 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional 
    ```
 
-4. Start the development server:
+4. Start the development server locally:
    ```bash
    npm run dev
    ```
@@ -84,7 +90,7 @@ A Vue 3 web application for monitoring and managing SwiftSensors devices, sensor
 
 ## API Integration
 
-The application integrates with the SwiftSensors API:
+The application integrates with the [SwiftSensors API](https://my.swiftsensors.net/api-docs):
 - V1 endpoints for account information
 - V2 endpoints for sensors and notifications
 - Authentication using API key and Bearer token
