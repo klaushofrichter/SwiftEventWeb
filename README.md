@@ -73,8 +73,7 @@ With that, you need to execute these calls for a deployment of the proxy:
 
 ```bash
 cd ./cors-proxy
-wranger login
-wrangler deploy
+wrangler login
 ```
 
 The `wrangler` tools should be installed when running `npm install` initially. Note that `wrangler` may be depreciated 
