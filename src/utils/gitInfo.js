@@ -1,9 +1,8 @@
-export function getLastCommitDate() {
+export function getVersion() {
   try {
-    const { stdout } = require('child_process').execSync('git log -1 --format=%cd --date=format:"%Y-%m-%d %H:%M:%S"');
-    return stdout.toString().trim();
+    return import.meta.env.VITE_APP_VERSION || 'Unknown';
   } catch (error) {
-    console.error('Error getting last commit date:', error);
+    console.error('Error getting version:', error);
     return 'Unknown';
   }
 } 

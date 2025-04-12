@@ -67,7 +67,7 @@
         </div>
       </form>
       <div class="text-center text-sm text-gray-500">
-        Last updated: {{ lastCommitDate }}
+        Version {{ version }}
       </div>
     </div>
   </div>
@@ -77,7 +77,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
-import { getLastCommitDate } from '../utils/gitInfo';
+import { getVersion } from '../utils/gitInfo';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -86,7 +86,7 @@ const email = ref('');
 const password = ref('');
 const error = ref('');
 const loading = ref(false);
-const lastCommitDate = ref(getLastCommitDate());
+const version = ref(getVersion());
 
 const login = async () => {
   if (!email.value || !password.value) {
