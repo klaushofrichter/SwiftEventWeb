@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -f",
+    "deploy": "gh-pages -d dist -f -m 'Deploy to GitHub Pages'",
     "help-gh-pages": "gh-pages --help"
   },
   "dependencies": {

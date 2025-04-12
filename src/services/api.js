@@ -2,7 +2,8 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
 // Check if we're in production (GitHub Pages)
-const isProduction = new URL(window.location.href).hostname === 'github.io';
+const allowedHosts = ['github.io', 'klaushofrichter.github.io'];
+const isProduction = allowedHosts.includes(window.location.hostname);
 
 // Base URL for all API calls
 const baseURL = isProduction 
