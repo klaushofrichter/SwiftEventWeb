@@ -73,7 +73,7 @@ With that, you need to execute these calls for a deployment of the proxy:
 
 ```bash
 cd ./cors-proxy
-wranger login
+wrangler login
 wrangler deploy
 ```
 
