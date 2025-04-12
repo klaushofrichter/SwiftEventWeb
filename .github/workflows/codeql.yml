@@ -1,6 +1,8 @@
 name: "CodeQL"
 
 on:
+  push:
+    branches: [ "prod" ]
   pull_request:
     branches: [ "prod" ]
   workflow_dispatch:
@@ -17,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
+        language: [ 'javascript-typescript' ]
 
     steps:
       - name: Checkout repository
