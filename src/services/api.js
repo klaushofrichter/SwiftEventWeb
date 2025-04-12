@@ -1,6 +1,20 @@
 import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
+// Check if we're in production (GitHub Pages)
+const isProduction = window.location.hostname.includes('github.io');
+
+// Create two axios instances: one for login (with potential proxy) and one for regular API calls
+const loginApi = axios.create({
+  baseURL: isProduction 
+    ? 'https://cors-proxy.swiftsensors.workers.dev/api/client'
+    : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
+  headers: {
+    'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
+    'Content-Type': 'application/json'
+  }
+});
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
   headers: {
@@ -12,11 +26,6 @@ const api = axios.create({
 // Add request interceptor to include bearer token for all requests except sign-in
 api.interceptors.request.use(
   (config) => {
-    // Skip adding token for sign-in request
-    if (config.url === '/v1/sign-in') {
-      return config;
-    }
-
     const authStore = useAuthStore();
     if (authStore.token) {
       config.headers.Authorization = `Bearer ${authStore.token}`;
@@ -31,7 +40,8 @@ api.interceptors.request.use(
 export const authService = {
   login: async (email, password) => {
     try {
-      const response = await api.post('/v1/sign-in', {
+      // Use loginApi for sign-in
+      const response = await loginApi.post('/v1/sign-in', {
         "email": email,
         "password": password
       });

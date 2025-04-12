@@ -44,6 +44,14 @@ This application was build using Cursor.com on MacOS 15.4 and Windows 11.
 
 - There is no realtime event handling or timeseries display. The authentication may expire, it is needed to re-login if that happens. The only way to update values shown is the reload the app.
 - The Application is not actively maintained. 
+- The user account that is used for login can not have 2FA enabled. Therefore, in the my.Swiftsensors.net console, 
+  it is recommended to create a sub-user without 2FA if the standard user has 2FA enabled and you are unwilling 
+  to disable this setting. The sub-user might have less access right to compensate for the reduction of security 
+  features. 
+- CORS handling: The application uses different approaches for development and production:
+  - In development: Uses Vite's proxy configuration
+  - In production (GitHub Pages): Uses a Cloudflare Worker proxy (cors-proxy.swiftsensors.workers.dev) for login only
+  - All other API calls use direct communication with the SwiftSensors API
 
 ## Prerequisites
 
