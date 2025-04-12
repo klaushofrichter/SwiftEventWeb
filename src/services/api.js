@@ -2,11 +2,11 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
 // Check if we're in production (GitHub Pages)
-const isProduction = new URL(window.location.href).hostname === 'github.io';
+const isProduction = window.location.hostname.includes('github.io') || window.location.hostname.includes('klaushofrichter.github.io');
 
 // Base URL for all API calls
 const baseURL = isProduction 
-  ? import.meta.env.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL
+  ? 'https://cors-proxy.swiftsensors.workers.dev/proxy/api/client'
   : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL;
 
 // Create two axios instances: one for login and one for authenticated requests
