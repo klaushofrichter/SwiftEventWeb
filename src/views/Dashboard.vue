@@ -220,9 +220,7 @@ const fetchData = async () => {
   accountLoading.value = true;
   try {
     await dataStore.fetchAccountInfo();
-    console.log("Dashboard account info:", dataStore.accountInfo);
   } catch (err) {
-    console.error("Error fetching account info:", err);
     accountError.value = err.message || 'Failed to fetch account information';
   } finally {
     accountLoading.value = false;
@@ -233,7 +231,6 @@ const fetchData = async () => {
   try {
     await dataStore.fetchDevices();
     devices.value = dataStore.devices;
-    console.log("Dashboard devices:", devices.value);
   } catch (err) {
     devicesError.value = err.message || 'Failed to fetch devices';
   } finally {
@@ -245,7 +242,6 @@ const fetchData = async () => {
   try {
     await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
-    console.log("Dashboard sensors:", sensors.value);
   } catch (err) {
     sensorsError.value = err.message || 'Failed to fetch sensors';
   } finally {
@@ -257,7 +253,6 @@ const fetchData = async () => {
   try {
     await dataStore.fetchNotifications();
     notifications.value = dataStore.notifications;
-    console.log("Dashboard notifications:", notifications.value);
   } catch (err) {
     notificationsError.value = err.message || 'Failed to fetch notifications';
   } finally {

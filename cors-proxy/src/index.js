@@ -25,7 +25,6 @@ export default {
       redirect: 'follow'
     });
 
-    //console.log('newRequest targetUrl: ', targetUrl);
     const response = await fetch(newRequest);
 
     // Add CORS headers to the response
@@ -33,7 +32,6 @@ export default {
     modified.headers.set('Access-Control-Allow-Origin', '*');
     modified.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     modified.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key');
-    //console.log('response headers: ', JSON.stringify(modified.headers));
 
     return modified;
   }
