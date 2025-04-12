@@ -2,8 +2,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/auth';
 
 // Check if we're in production (GitHub Pages)
-const allowedHosts = ['github.io', 'klaushofrichter.github.io'];
-const isProduction = allowedHosts.includes(window.location.hostname);
+const isProduction = window.location.hostname === import.meta.env.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN;
 
 // Base URL for all API calls
 const baseURL = isProduction 
