@@ -1,7 +1,7 @@
 # SwiftSensors Web Application
 
 A Vue 3 web application for monitoring and managing SwiftSensors devices, sensors, and notifications. 
-This application was build using Cursor.com.
+This application was build using Cursor.com on MacOS 15.4 and Windows 11.
 
 ## Features
 
@@ -79,6 +79,11 @@ This application was build using Cursor.com.
    npm run dev
    ```
 
+5. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
+   ```bash
+   npm run dev
+   ```
+
 ## Project Structure
 
 - `src/`
@@ -95,31 +100,6 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 - V2 endpoints for sensors and notifications
 - Authentication using API key and Bearer token
 
-## Development
-
-To start development:
-1. Ensure you have the correct API credentials
-2. Run the development server
-3. Access the application at `http://localhost:5173`
-
-## Building for Production
-
-The branch `prod` is used for deployments. 
-
-To create a production build:
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
 
 ## License
 
