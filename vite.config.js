@@ -5,6 +5,7 @@ import { version } from './package.json'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  base: "/SwiftEventWeb",
   server: {
     proxy: {
       '/api': {
