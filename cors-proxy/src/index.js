@@ -12,7 +12,7 @@ export default {
       body: ['GET', 'HEAD'].includes(request.method) ? null : request.body,
       redirect: 'follow'
     });
-
+    console.log('newRequest', newRequest);
     const response = await fetch(newRequest);
 
     // Add CORS headers to the response

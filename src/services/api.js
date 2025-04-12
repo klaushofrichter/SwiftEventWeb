@@ -7,7 +7,7 @@ const isProduction = window.location.hostname.includes('github.io');
 // Create two axios instances: one for login (with potential proxy) and one for regular API calls
 const loginApi = axios.create({
   baseURL: isProduction 
-    ? 'https://cors-proxy.swiftsensors.workers.dev/api/client'
+    ? 'https://cors-proxy.swiftsensors.workers.dev/proxy/api/client'
     : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
   headers: {
     'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
