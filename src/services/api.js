@@ -4,22 +4,22 @@ import { useAuthStore } from '../stores/auth';
 // Check if we're in production (GitHub Pages)
 const isProduction = window.location.hostname.includes('github.io');
 
-// Create two axios instances: one for login (with proxy) and one for regular API calls
+// Base URL for all API calls
+const baseURL = isProduction 
+  ? 'https://cors-proxy.swiftsensors.workers.dev/proxy/api/client'
+  : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL;
+
+// Create two axios instances: one for login and one for authenticated requests
 const loginApi = axios.create({
-  baseURL: isProduction 
-    ? 'https://cors-proxy.swiftsensors.workers.dev/proxy/api/client'
-    : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
+  baseURL,
   headers: {
     'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
     'Content-Type': 'application/json'
   }
 });
 
-// Regular API calls go directly to the API in production
 const api = axios.create({
-  baseURL: isProduction 
-    ? 'https://api.swiftsensors.net/api/client'
-    : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL,
+  baseURL,
   headers: {
     'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
     'Content-Type': 'application/json'
