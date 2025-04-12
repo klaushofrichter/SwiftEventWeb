@@ -7,7 +7,7 @@ const isProduction = allowedHosts.includes(window.location.hostname);
 
 // Base URL for all API calls
 const baseURL = isProduction 
-  ? 'https://cors-proxy.swiftsensors.workers.dev/proxy/api/client'
+  ? import.meta.env.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL
   : import.meta.env.VITE_SWIFT_SENSORS_PROXY_API_URL;
 
 // Create two axios instances: one for login and one for authenticated requests
