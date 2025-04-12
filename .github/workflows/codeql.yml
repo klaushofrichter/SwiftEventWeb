@@ -1,0 +1,12 @@
+name: CodeQL
+
+on:
+  pull_request:
+        branches:
+          - prod 
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/codeql-action/analyze@v2
