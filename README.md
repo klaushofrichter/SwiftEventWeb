@@ -127,6 +127,7 @@ This allows Github Pages to operate.
    VITE_SWIFT_SENSORS_API_HOST="https://api.swiftsensors.net"
    VITE_SWIFT_SENSORS_PROXY_API_URL="/api/api/client" # for local execution only
    VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.swiftsensors.workers.dev/proxy/api/client" # for production only
+   VITE_SWIFT_SENSORS_PROD_APP_DOMAIN="klaushofrichter.github.io" # for production, needs to be adopted to your domain 
    VITE_SWIFT_SENSORS_USER=your-email-address  # optional (for local API test)
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional (for local API test)
    ```
