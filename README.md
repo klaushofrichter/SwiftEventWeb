@@ -80,9 +80,7 @@ This application was build using Cursor.com on MacOS 15.4 and Windows 11.
    ```
 
 5. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
-   ```bash
-   npm run dev
-   ```
+ 
 
 ## Project Structure
 
