@@ -74,14 +74,17 @@ jobs:
           VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ secrets.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Deploy
+        run: npm run deploy
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
+#      - name: Setup Pages
+#        uses: actions/configure-pages@v4
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+#      - name: Upload artifact
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          path: './dist'
+
+#      - name: Deploy to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v4
