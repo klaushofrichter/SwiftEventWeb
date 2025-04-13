@@ -151,6 +151,7 @@ This allows Github Pages to operate.
   - `stores/` - Pinia state management
   - `services/` - API service layer
   - `assets/` - Static assets
+-`cors-proxy/` - Cloudflare worker to handle CORS
 
 ## API Integration
 
