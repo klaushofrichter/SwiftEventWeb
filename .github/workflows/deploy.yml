@@ -76,12 +76,12 @@ jobs:
 
       - name: Deploy
         run: |
-          npx gh-pages -d dist -f -m 'Deploy to GitHub Pages' -u "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          npx gh-pages -d dist -f -m 'Deploy to GitHub Pages' -u "github-actions <github-actions@users.noreply.github.com>"
         env:
-          GIT_AUTHOR_NAME: github-actions[bot]
-          GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: github-actions[bot]
-          GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
+          GIT_AUTHOR_NAME: github-actions
+          GIT_AUTHOR_EMAIL: github-actions@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions
+          GIT_COMMITTER_EMAIL: github-actions@users.noreply.github.com
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Setup Pages
