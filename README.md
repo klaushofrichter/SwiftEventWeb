@@ -1,7 +1,9 @@
 # SwiftSensors Web Application
 
 A Vue 3 web application for monitoring and managing SwiftSensors devices, sensors, and notifications. 
-This application was build using Cursor.com on MacOS 15.4 and Windows 11.
+This application was build using Cursor.com on MacOS 15.4 and Windows 11. The application was build 
+based on the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) and has other than that 
+no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
 
 ## Features
 

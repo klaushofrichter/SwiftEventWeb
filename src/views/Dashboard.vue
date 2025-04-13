@@ -221,7 +221,7 @@ const fetchData = async () => {
   try {
     await dataStore.fetchAccountInfo();
   } catch (err) {
-    accountError.value = err.message || 'Failed to fetch account information';
+    accountError.value = err.msg || 'Failed to fetch account information';
   } finally {
     accountLoading.value = false;
   }
@@ -232,7 +232,11 @@ const fetchData = async () => {
     await dataStore.fetchDevices();
     devices.value = dataStore.devices;
   } catch (err) {
-    devicesError.value = err.message || 'Failed to fetch devices';
+    if(err.msg === 'Permission Denied') {
+      devicesError.value = 'Your account may not be authorized to access this data';
+    } else {
+      devicesError.value = err.msg || 'Failed to fetch devices';
+    }
   } finally {
     devicesLoading.value = false;
   }
@@ -243,7 +247,7 @@ const fetchData = async () => {
     await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
   } catch (err) {
-    sensorsError.value = err.message || 'Failed to fetch sensors';
+    sensorsError.value = err.msg || 'Failed to fetch sensors';
   } finally {
     sensorsLoading.value = false;
   }
@@ -254,7 +258,7 @@ const fetchData = async () => {
     await dataStore.fetchNotifications();
     notifications.value = dataStore.notifications;
   } catch (err) {
-    notificationsError.value = err.message || 'Failed to fetch notifications';
+    notificationsError.value = err.msg || 'Failed to fetch notifications';
   } finally {
     notificationsLoading.value = false;
   }
@@ -265,7 +269,7 @@ const showNotificationDetails = async (notificationId) => {
     await dataStore.fetchNotificationDetails(notificationId);
     selectedNotification.value = dataStore.selectedNotification;
   } catch (err) {
-    notificationsError.value = err.message || 'Failed to fetch notification details';
+    notificationsError.value = err.msg || 'Failed to fetch notification details';
   }
 };
 
