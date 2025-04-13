@@ -1,6 +1,9 @@
-name: "Manual CodeQL Analysis"
+name: "CodeQL Analysis"
 
 on:
+  pull_request:
+    branches:
+      - prod
   workflow_dispatch:
 
 jobs:

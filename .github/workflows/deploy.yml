@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - prod
-  pull_request:
-    branches:
-      - prod
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -80,16 +77,3 @@ jobs:
                 -m 'Deploy to GitHub Pages' \
                 -u "github-actions <github-actions@users.noreply.github.com>" \
                 -r "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-                
-
-#      - name: Setup Pages
-#        uses: actions/configure-pages@v4
-
-#      - name: Upload artifact
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#          path: './dist'
-
-#      - name: Deploy to GitHub Pages
-#        id: deployment
-#        uses: actions/deploy-pages@v4
