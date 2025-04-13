@@ -92,6 +92,7 @@ VITE_SWIFT_SENSORS_API_KEY
 VITE_SWIFT_SENSORS_API_HOST
 VITE_SWIFT_SENSORS_PROXY_API_URL
 VITE_SWIFT_SENSORS_PROD_PROXY_API_URL
+VITE_SWIFT_SENSORS_PROD_APP_DOMAIN
 ```
 This allows Github Pages to operate. 
 
@@ -150,6 +151,7 @@ This allows Github Pages to operate.
   - `stores/` - Pinia state management
   - `services/` - API service layer
   - `assets/` - Static assets
+-`cors-proxy/` - Cloudflare worker to handle CORS
 
 ## API Integration
 
