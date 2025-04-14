@@ -127,7 +127,15 @@ This allows Github Pages to operate.
    npm install
    ```
 
-3. Create a `.env` file in the root directory with your API configuration:
+3. Set up Git hooks:
+   ```bash
+   npm run setup-hooks
+   ```
+   This will set up:
+   - A pre-commit hook that automatically increments the patch version number
+   - Updates the last-commit date when committing to the develop branch
+
+4. Create a `.env` file in the root directory with your API configuration:
    ```
    VITE_SWIFT_SENSORS_API_KEY=your-api-key
    VITE_SWIFT_SENSORS_API_HOST="https://api.swiftsensors.net"
@@ -138,12 +146,12 @@ This allows Github Pages to operate.
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional (for local API test)
    ```
 
-4. Start the development server locally:
+5. Start the development server locally:
    ```bash
    npm run dev
    ```
 
-5. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
+6. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
  
 
 ## Project Structure
