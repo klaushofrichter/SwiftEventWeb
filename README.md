@@ -5,6 +5,9 @@ This application was build using Cursor.com on MacOS 15.4 and Windows 11. The ap
 based on the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) and has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
 
+![GH Pages Deploymentt](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push)
+![Code QA Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg)
+
 ## Features
 
 - **Account Information**
