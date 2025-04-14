@@ -52,9 +52,9 @@ The application uses Vite's proxy configuration to avoid CORS issues. This shoul
 
 ### Production
 
-There is a configuration provided for [Github Pages](https://klaushofrichter.github.io/SwiftEventWeb) and a Cloudflare Worker proxy (cors-proxy.swiftsensors.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker proxy may or may not be active, so there is no guarantee that this would be working at any time. 
+There is a configuration provided for [Github Pages](https://klaushofrichter.github.io/SwiftEventWeb) that uses a Cloudflare Worker proxy (cors-proxy.swiftsensors.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker proxy may or may not be active, so there is no guarantee that this would be working at any time. 
 
-You can setup your own Github pages service and Cloudflare proxy: To deploy to Github pages you will need to configure your 
+You can setup your own Github pages deployment and Cloudflare proxy: To deploy to Github pages you will need to configure your 
 Github repository appropriately, see the "Pages" tab in "Settings" for the repository. You can configure to deploy Github 
 pages from the "gh-pages" branch. Here is how to create this branch and deploy into it if you cloned or forked this current repository:
 
@@ -64,7 +64,7 @@ npm run deploy
 ```
 The above calls create a production build and deploy it into the Github Pages environment. This may be active for the 
 source repository, try to navigate to [this URL](https://klaushofrichter.github.io/SwiftEventWeb/).  There is no need to
-commit local changes to Github, the deployment to gh-pages is happening with the call to `npn run deploy`. A pull request 
+commit local changes to Github, the deployment to gh-pages is happening with the call to `npn run deploy` directly. A pull request 
 from the [develop branch](https://github.com/klaushofrichter/SwiftEventWeb/tree/develop) to the [prod](https://github.com/klaushofrichter/SwiftEventWeb/tree/prod) branch is triggering a Github action to create the `gh-pages` build, so there is no
 need to run `build` and `deploy` locally when a PR is sucessfully merging `develop` to `prod`.  
 
@@ -165,7 +165,7 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 
 MIT License
 
-Copyright (c) 2024 Klaus Hofrichter
+Copyright (c) 2025 Klaus Hofrichter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
