@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "type": "module",
   "base": "/SwiftEventWeb/",
-  "last-commit": "Sun Apr 13 20:06:39 CDT 2025",
+  "last-commit": "Mon Apr 14 11:24:36 CDT 2025",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

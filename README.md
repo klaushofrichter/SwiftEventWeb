@@ -145,13 +145,13 @@ This allows Github Pages to operate.
 
 ## Project Structure
 
+- `cors-proxy` - Cloudflare proxy to handle CORS
 - `src/`
   - `components/` - Reusable Vue components
   - `views/` - Page components
   - `stores/` - Pinia state management
   - `services/` - API service layer
-  - `assets/` - Static assets
--`cors-proxy/` - Cloudflare worker to handle CORS
+  - `assets/` - Static asset
 
 ## API Integration
 
