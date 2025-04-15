@@ -136,6 +136,8 @@ This allows Github Pages to operate.
    This will set up:
    - A pre-commit hook that automatically increments the patch version number
    - Updates the last-commit date when committing to the develop branch
+   - This may not work on Windows Powershell. That means that the automated version update is not working. Try gitbash and call `.hooks/setup-hooks.sh` 
+   from the terminal. 
 
 4. Create a `.env` file in the root directory with your API configuration:
    ```
@@ -144,8 +146,8 @@ This allows Github Pages to operate.
    VITE_SWIFT_SENSORS_PROXY_API_URL="/api/api/client" # for local execution only
    VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.swiftsensors.workers.dev/proxy/api/client" # for production only
    VITE_SWIFT_SENSORS_PROD_APP_DOMAIN="klaushofrichter.github.io" # for production, needs to be adopted to your domain 
-   VITE_SWIFT_SENSORS_USER=your-email-address  # optional (for local API test)
-   VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional (for local API test)
+   VITE_SWIFT_SENSORS_USER=your-email-address  # optional 
+   VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional
    ```
 
 5. Start the development server locally:
@@ -175,7 +177,17 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 
 ## Testing
 
-The application includes automated tests using Playwright. To run the tests:
+There are two types of tests: a local API test using `./test_api.sh` and a Playwright test of the Application, locally or in production. To run these 
+locally you need to provide valid credentials in the `.env ` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD`. 
+
+Local API test: `test_api.sh`: this is a simple CURL script that tests the credentials by
+retrieving an access token from the Swiftsensors API. Just call the script
+in the terminal.
+
+Playwright: this can be invoced locally by `npm run test`. 
+You may need to manually install a headless browser locally before by calling `playwright install chromium` on the terminal. 
+
+To run the test locally:
 
 ```bash
 npm run test
@@ -195,6 +207,9 @@ Make sure your `.env` file contains valid credentials for testing:
 VITE_SWIFT_SENSORS_USER=your-email-address
 VITE_SWIFT_SENSORS_PASSWORD=your-password
 ```
+
+You can run this also as part of the github actions workflow `.github/workflows/test.yaml` against the production deployment. 
+
 
 ## License
 
