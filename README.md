@@ -6,8 +6,8 @@ based on the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) and
 no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
-![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg&label=CodeQL)
-![version](https://img.shields.io/badge/version-1.2.3-blue)
+![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL)
+![version](https://img.shields.io/badge/version-1.1.5-green)
 ## Features
 
 - **Account Information**
