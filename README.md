@@ -7,7 +7,7 @@ no relation to SwiftSensors. Specifically, this application is not supported by 
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
 ![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg&label=CodeQL)
-
+![version](https://img.shields.io/badge/version-1.2.3-blue)
 ## Features
 
 - **Account Information**
