@@ -38,6 +38,6 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
         env:
-          PLAYWRIGHT_TEST_BASE_URL: https://klaushofrichter.github.io/SwiftEventWeb
-          PLAYWRIGHT_TEST_USERNAME: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
-          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }} 
+          VITE_SWIFT_SENSORS_USER: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
+          VITE_SWIFT_SENSORS_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }}
+          PLAYWRIGHT_TEST_BASE_URL: https://klaushofrichter.github.io/SwiftEventWeb 
