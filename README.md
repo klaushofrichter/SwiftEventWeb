@@ -173,6 +173,28 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 - V2 endpoints for sensors and notifications
 - Authentication using API key and Bearer token
 
+## Testing
+
+The application includes automated tests using Playwright. To run the tests:
+
+```bash
+npm run test
+```
+
+This will:
+1. Start the development server
+2. Run the tests in Chrome headless mode
+3. Generate an HTML report of the test results
+
+The tests currently cover:
+- Login functionality
+- Dashboard page verification
+
+Make sure your `.env` file contains valid credentials for testing:
+```
+VITE_SWIFT_SENSORS_USER=your-email-address
+VITE_SWIFT_SENSORS_PASSWORD=your-password
+```
 
 ## License
 
