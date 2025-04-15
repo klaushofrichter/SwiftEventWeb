@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Get current branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Only proceed if we're on develop branch
+if [ "$BRANCH" = "develop" ]; then
+    # Get current date
+    DATE=$(date)
+    
+    # Update last-commit date in package.json
+    perl -i -pe 's/"last-commit": *"[^"]*"/"last-commit": "'"$DATE"'"/' package.json
+    
+    # Read current version and increment patch number
+    CURRENT_VERSION=$(node -p "require('./package.json').version")
+    IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+    MAJOR="${VERSION_PARTS[0]}"
+    MINOR="${VERSION_PARTS[1]}"
+    PATCH="${VERSION_PARTS[2]}"
+    NEW_PATCH=$((PATCH + 1))
+    NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+    
+    # Update version in package.json
+    perl -i -pe 's/"version": *"[^"]*"/"version": "'"$NEW_VERSION"'"/' package.json
+    
+    # Update version badge in README.md
+    #perl -i -pe 's/!\[version\]\(https:\/\/img\.shields\.io\/badge\/version-[0-9]+\.[0-9]+\.[0-9]+-green\)/![version](https:\/\/img.shields.io\/badge\/version-'"$NEW_VERSION"'-green)/' README.md
+    
+    # Stage the modified files
+    git add package.json 
+    
+    echo "Updated last-commit date to $DATE"
+fi 

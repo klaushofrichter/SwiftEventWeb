@@ -5,6 +5,11 @@ This application was build using Cursor.com on MacOS 15.4 and Windows 11. The ap
 based on the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) and has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
 
+![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
+![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL)
+![Dev Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fdevelop%2Fpackage.json&query=version&label=Dev%20Version&color=%2333ca55)
+![Prod Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fprod%2Fpackage.json&query=version&label=Prod%20Version&color=%2333ca55)
+
 ## Features
 
 - **Account Information**
@@ -124,7 +129,15 @@ This allows Github Pages to operate.
    npm install
    ```
 
-3. Create a `.env` file in the root directory with your API configuration:
+3. Set up Git hooks:
+   ```bash
+   npm run setup-hooks
+   ```
+   This will set up:
+   - A pre-commit hook that automatically increments the patch version number
+   - Updates the last-commit date when committing to the develop branch
+
+4. Create a `.env` file in the root directory with your API configuration:
    ```
    VITE_SWIFT_SENSORS_API_KEY=your-api-key
    VITE_SWIFT_SENSORS_API_HOST="https://api.swiftsensors.net"
@@ -135,12 +148,12 @@ This allows Github Pages to operate.
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional (for local API test)
    ```
 
-4. Start the development server locally:
+5. Start the development server locally:
    ```bash
    npm run dev
    ```
 
-5. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
+6. Launch a browser to this address: [http://localhost:5173](http://localhost:5173)
  
 
 ## Project Structure
