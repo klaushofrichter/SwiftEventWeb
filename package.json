@@ -1,10 +1,10 @@
 {
   "name": "swifteventweb",
   "private": true,
-  "version": "1.1.8",
+  "version": "1.1.9",
   "type": "module",
   "base": "/SwiftEventWeb/",
-  "last-commit": "Mon Apr 14 20:11:08 CDT 2025",
+  "last-commit": "Mon Apr 14 20:27:49 CDT 2025",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,7 +12,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist -f -m 'Deploy to GitHub Pages' -u 'Klaus Hofrichter <klaus@klaushofrichter.net>'",
     "help-gh-pages": "gh-pages --help",
-    "setup-hooks": "./.hooks/setup-hooks.sh"
+    "setup-hooks": "./.hooks/setup-hooks.sh",
+    "test": "playwright test --project=chromium"
   },
   "dependencies": {
     "@vueuse/core": "^10.7.2",
@@ -20,10 +21,12 @@
     "dotenv": "^16.4.7",
     "gh-pages": "^6.3.0",
     "pinia": "^2.1.7",
+    "playwright": "^1.51.1",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.42.1",
     "@vitejs/plugin-vue": "^5.0.3",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
