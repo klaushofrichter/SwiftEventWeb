@@ -16,6 +16,12 @@ test('login and verify dashboard', async ({ page }) => {
   // Navigate to login page
   await page.goto(process.env.PLAYWRIGHT_TEST_BASE_URL || '/');
 
+  // Verify version information is present 
+  const versionElement = await page.locator('text=/Version|version/i').first();
+  expect(versionElement).toBeVisible();
+  const versionText = await versionElement.textContent();
+  expect(versionText).toMatch(/\d+\.\d+\.\d+ .*/);
+ 
   // Wait for the login form to be visible
   await page.waitForSelector('form');
 
@@ -37,4 +43,44 @@ test('login and verify dashboard', async ({ page }) => {
   
   // Verify dashboard elements are present
   await expect(page.locator('h1')).toContainText('Dashboard');
+
+  // Verify section titles
+  await expect(page.locator('h2').filter({ hasText: 'Account Information' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Devices' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Sensors' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Notifications' })).toBeVisible();
+
+  // Verify loading states are not present
+  await expect(page.locator('text=Loading...')).not.toBeVisible();
+  await expect(page.locator('text=Failed to fetch')).not.toBeVisible();
+
+  // Debug: Print all text content on the page
+  const allText = await page.evaluate(() => document.body.innerText);
+  console.log('Page content:', allText);
+
+  // Verify logout button is present
+  await expect(page.locator('button').filter({ hasText: /Logout|logout/i })).toBeVisible();
+
+  // click logout button
+  await page.locator('button').filter({ hasText: /Logout|logout/i }).click();
+  console.log('Clicked logout button');
+
+  // Verify we're on the login page
+  await expect(page).toHaveURL(/.*login/);
+});
+
+test('verify login error handling', async ({ page }) => {
+  // Navigate to login page
+  await page.goto(process.env.PLAYWRIGHT_TEST_BASE_URL || '/');
+
+  // Try to login with invalid credentials
+  await page.locator('input[name="email"]').fill('invalid@example.com');
+  await page.locator('input[name="password"]').fill('wrongpassword');
+  await page.locator('button[type="submit"]').click();
+
+  // Verify error message is displayed
+  await expect(page.locator('text=Login failed')).toBeVisible();
+
+  // Verify we're still on the login page
+  await expect(page).toHaveURL(/.*login/);
 }); 
