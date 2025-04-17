@@ -25,6 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build project
+        env:
+          VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
+          VITE_SWIFT_SENSORS_API_HOST: ${{ secrets.VITE_SWIFT_SENSORS_API_HOST }}
+          VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ secrets.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
+          VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
+        run: npm run build
+
       - name: Create artifacts directory
         run: mkdir -p artifacts
 
@@ -34,6 +42,11 @@ jobs:
 
       - name: Create built package
         run: |
+          # Verify dist directory exists and has content
+          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
+            echo "Error: dist directory is missing or empty"
+            exit 1
+          fi
           # Create a zip file of the dist directory
           zip -r artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip dist/
 
