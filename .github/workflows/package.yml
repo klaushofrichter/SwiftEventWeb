@@ -6,6 +6,12 @@ on:
     types:
       - completed
 
+# Add permissions needed for creating releases
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
 jobs:
   build-package:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
