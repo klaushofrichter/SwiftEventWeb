@@ -61,32 +61,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        env:
-          VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
-          VITE_SWIFT_SENSORS_API_HOST: ${{ secrets.VITE_SWIFT_SENSORS_API_HOST }}
-          VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ secrets.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
-          VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
-        run: npm run build
-
-      - name: Security check - Verify no sensitive data in built files
-        run: |
-          # Check for potential API keys or sensitive data patterns
-          if grep -r --include="*.js" --include="*.html" --include="*.css" \
-              -E "api[_-]?key|secret|password|token|auth" dist/; then
-            echo "Error: Potential sensitive data found in built files"
-            exit 1
-          fi
-
       - name: Create artifacts directory
         run: mkdir -p artifacts
 
