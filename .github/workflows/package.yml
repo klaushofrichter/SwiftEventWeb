@@ -13,8 +13,47 @@ permissions:
   actions: read
 
 jobs:
+  check-workflow-status:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check workflow runs
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            
+            // Get the deploy workflow run
+            const deployRuns = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: 'deploy.yml',
+              branch: 'prod',
+              per_page: 1
+            });
+            
+            // Get the test workflow run
+            const testRuns = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: 'test.yml',
+              branch: 'prod',
+              per_page: 1
+            });
+            
+            // Check if both workflows exist and completed successfully
+            const deploySuccess = deployRuns.data.workflow_runs.length > 0 && 
+                                deployRuns.data.workflow_runs[0].conclusion === 'success';
+            const testSuccess = testRuns.data.workflow_runs.length > 0 && 
+                              testRuns.data.workflow_runs[0].conclusion === 'success';
+            
+            core.setOutput('should_run', deploySuccess && testSuccess);
+
   build-package:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: check-workflow-status
+    if: needs.check-workflow-status.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
