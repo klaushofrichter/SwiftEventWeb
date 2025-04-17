@@ -1,0 +1,75 @@
+name: Build Package
+
+on:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages", "Test"]
+    types:
+      - completed
+
+jobs:
+  build-package:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create artifacts directory
+        run: mkdir -p artifacts
+
+      - name: Get version from package.json
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create built package
+        run: |
+          # Create a zip file of the dist directory
+          zip -r artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip dist/
+
+      - name: Create source code package
+        run: |
+          # Create a zip file of the source code (excluding node_modules and dist)
+          zip -r artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip . \
+            -x "node_modules/*" \
+            -x "dist/*" \
+            -x ".git/*" \
+            -x "*.gitignore" \
+            -x "*.env*" \
+            -x "artifacts/*"
+
+      - name: Upload built package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-sensors-web-package
+          path: artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip
+          retention-days: 5
+
+      - name: Upload source code artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-sensors-web-src
+          path: artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip
+          retention-days: 5
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          name: Release v${{ steps.package-version.outputs.version }}
+          files: |
+            artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip
+            artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
