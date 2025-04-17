@@ -78,6 +78,15 @@ jobs:
           VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
         run: npm run build
 
+      - name: Security check - Verify no sensitive data in built files
+        run: |
+          # Check for potential API keys or sensitive data patterns
+          if grep -r --include="*.js" --include="*.html" --include="*.css" \
+              -E "api[_-]?key|secret|password|token|auth" dist/; then
+            echo "Error: Potential sensitive data found in built files"
+            exit 1
+          fi
+
       - name: Create artifacts directory
         run: mkdir -p artifacts
 
@@ -85,33 +94,19 @@ jobs:
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - name: Create built package
-        run: |
-          # Verify dist directory exists and has content
-          if [ ! -d "dist" ] || [ -z "$(ls -A dist)" ]; then
-            echo "Error: dist directory is missing or empty"
-            exit 1
-          fi
-          # Create a zip file of the dist directory
-          zip -r artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip dist/
-
       - name: Create source code package
         run: |
-          # Create a zip file of the source code (excluding node_modules and dist)
+          # Create a zip file of the source code (excluding sensitive files and directories)
           zip -r artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip . \
             -x "node_modules/*" \
             -x "dist/*" \
             -x ".git/*" \
             -x "*.gitignore" \
             -x "*.env*" \
-            -x "artifacts/*"
-
-      - name: Upload built package artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: swift-sensors-web-package
-          path: artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip
-          retention-days: 5
+            -x "artifacts/*" \
+            -x "**/secrets.*" \
+            -x "**/config.*" \
+            -x "**/credentials.*"
 
       - name: Upload source code artifact
         uses: actions/upload-artifact@v4
@@ -125,9 +120,7 @@ jobs:
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
           name: Release v${{ steps.package-version.outputs.version }}
-          files: |
-            artifacts/swift-sensors-web_v${{ steps.package-version.outputs.version }}.zip
-            artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip
+          files: artifacts/swift-sensors-web-src_v${{ steps.package-version.outputs.version }}.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
