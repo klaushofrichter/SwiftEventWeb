@@ -5,6 +5,8 @@ on:
     workflows: ["Deploy to GitHub Pages"]
     types:
       - completed
+    branches:
+      - prod
   workflow_dispatch:
     inputs:
       environment:
@@ -18,6 +20,8 @@ on:
 
 jobs:
   test:
+    # Only run if the deployment was successful
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
