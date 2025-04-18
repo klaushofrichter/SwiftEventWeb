@@ -28,7 +28,9 @@ RESP=$( curl -v -X POST "${VITE_SWIFT_SENSORS_API_URL}" \
        \"password\":\"${VITE_SWIFT_SENSORS_PASSWORD}\",\
        \"language\": \"en\"}" )
 echo "${RESP}"
+ACCESSTOKEN=$( echo "${RESP}" | jq -r '.access_token' )
 REFRESHTOKEN=$( echo "${RESP}" | jq -r '.refresh_token' )
+echo "access_token: ${ACCESSTOKEN}"  
 echo "refresh_token: ${REFRESHTOKEN}"  
 sleep 5
 
@@ -45,4 +47,5 @@ sleep 5
 curl -v -X POST https://api.swiftsensors.net/api/token/v2/refresh \
   -H "X-API-Key: ${VITE_SWIFT_SENSORS_API_KEY}" \
   -H "Content-Type: text/plain" \
+  -H "Authorization: Bearer ${ACCESSTOKEN}"  \
   -d "${REFRESHTOKEN}" 
