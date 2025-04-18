@@ -8,15 +8,10 @@ export default defineConfig({
   base: '/SwiftEventWeb/',
   server: {
     proxy: {
-      '/api/api/client/refresh': {
+      '/proxy': {
         target: 'https://api.swiftsensors.net',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/api\/client\/refresh/, '/api/token/v2/refresh')
-      },
-      '/api': {
-        target: 'https://api.swiftsensors.net',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/proxy/, '')
       }
     }
   },
@@ -25,5 +20,3 @@ export default defineConfig({
     'import.meta.env.VITE_APP_LAST_COMMIT': JSON.stringify(pkg['last-commit'] || '')
   }
 })
-
-

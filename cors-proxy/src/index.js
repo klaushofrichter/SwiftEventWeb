@@ -15,8 +15,10 @@ export default {
     const url = new URL(request.url);
 
     // Build target URL by removing `/proxy` from the path
-    const targetUrl = `https://api.swiftsensors.net${url.pathname.replace(/^\/proxy/, '')}${url.search}`;
-
+    console.log("url.pathname", url.pathname);
+    const targetUrl = `https://api.swiftsensors.net${url.pathname}${url.search}`;
+    console.log("targetUrl", targetUrl);
+    
     // Clone and forward the request
     const newRequest = new Request(targetUrl, {
       method: request.method,
