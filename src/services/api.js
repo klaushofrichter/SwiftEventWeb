@@ -56,7 +56,7 @@ export const authService = {
   refreshToken: async (refreshToken) => {
     try {
       const authStore = useAuthStore();
-      const response = await loginApi.post('/api/client/token/v2/refresh', refreshToken, {
+      const response = await loginApi.post('/refresh', refreshToken, {
         headers: {
           'Content-Type': 'text/plain',
           'Authorization': `Bearer ${authStore.token}`

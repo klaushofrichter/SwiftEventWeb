@@ -98,8 +98,8 @@ export const useAuthStore = defineStore('auth', {
       }
 
       // Calculate time until refresh (1 hour before expiration)
-      const timeUntilRefresh = this.tokenExpiresAt - Date.now() - (60 * 60 * 1000); // 1 hour in milliseconds
-      //const timeUntilRefresh = (1 * 60 * 1000); // 1 minute for testing in milliseconds
+      //const timeUntilRefresh = this.tokenExpiresAt - Date.now() - (60 * 60 * 1000); // 1 hour in milliseconds
+      const timeUntilRefresh = (1 * 60 * 1000); // 1 minute for testing in milliseconds
       console.log('Time until refresh:', timeUntilRefresh);
 
       if (timeUntilRefresh > 0) {
