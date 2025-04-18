@@ -51,6 +51,17 @@ export const authService = {
     } catch (error) {
       throw error.response?.data || error;
     }
+  },
+
+  refreshToken: async (refreshToken) => {
+    try {
+      const response = await loginApi.post('/token/v2/refresh', {
+        "refresh_token": refreshToken
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
   }
 };
 
