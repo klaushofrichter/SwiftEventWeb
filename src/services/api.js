@@ -43,10 +43,26 @@ api.interceptors.request.use(
 export const authService = {
   login: async (email, password) => {
     try {
-      const response = await loginApi.post('/v1/sign-in', {
+      const response = await loginApi.post('/api/client/v1/sign-in', {
         "email": email,
         "password": password
       });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  refreshToken: async (refreshToken) => {
+    try {
+      const authStore = useAuthStore();
+      const response = await loginApi.post('/api/token/v2/refresh', refreshToken, {
+        headers: {
+          'Content-Type': 'text/plain',
+          'Authorization': `Bearer ${authStore.token}`
+        }
+      });
+      console.log("refreshToken response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -57,7 +73,7 @@ export const authService = {
 export const accountService = {
   getAccountInfo: async (accountId) => {
     try {
-      const response = await api.get(`/v1/accounts/${accountId}`);
+      const response = await api.get(`/api/client/v1/accounts/${accountId}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -68,7 +84,7 @@ export const accountService = {
 export const sensorService = {
   getSensors: async (accountId) => {
     try {
-      const response = await api.get(`/v2/accounts/${accountId}/sensors/visible`);
+      const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/visible`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -79,7 +95,7 @@ export const sensorService = {
 export const notificationService = {
   getNotifications: async (accountId) => {
     try {
-      const response = await api.get(`/v2/accounts/${accountId}/notifications`);
+      const response = await api.get(`/api/client/v2/accounts/${accountId}/notifications`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -88,7 +104,7 @@ export const notificationService = {
   
   getNotificationDetails: async (accountId, notificationId) => {
     try {
-      const response = await api.get(`/v2/accounts/${accountId}/notifications/${notificationId}`);
+      const response = await api.get(`/api/client/v2/accounts/${accountId}/notifications/${notificationId}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -99,7 +115,7 @@ export const notificationService = {
 export const deviceService = {
   getDevices: async (accountId) => {
     try {
-      const response = await api.get(`/v1/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;

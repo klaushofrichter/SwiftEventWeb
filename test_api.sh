@@ -20,10 +20,32 @@ echo "url: ${VITE_SWIFT_SENSORS_API_URL}"
 echo "api-key: ${VITE_SWIFT_SENSORS_API_KEY:0:5}..."
 
 #
-# Make the API call
-curl -v -X POST "${VITE_SWIFT_SENSORS_API_URL}" \
+# Make the singn-in API call
+RESP=$( curl -v -X POST "${VITE_SWIFT_SENSORS_API_URL}" \
   -H "X-API-Key: ${VITE_SWIFT_SENSORS_API_KEY}" \
   -H "Content-Type: application/json" \
   -d "{\"email\":\"${VITE_SWIFT_SENSORS_USER}\",\
        \"password\":\"${VITE_SWIFT_SENSORS_PASSWORD}\",\
-       \"language\": \"en\"}"
+       \"language\": \"en\"}" )
+echo "${RESP}"
+ACCESSTOKEN=$( echo "${RESP}" | jq -r '.access_token' )
+REFRESHTOKEN=$( echo "${RESP}" | jq -r '.refresh_token' )
+echo "access_token: ${ACCESSTOKEN}"  
+echo "refresh_token: ${REFRESHTOKEN}"  
+sleep 5
+
+#
+# Make the refresh 
+#VITE_SWIFT_SENSORS_API_URL="${VITE_SWIFT_SENSORS_API_HOST}/api/token/v2/refresh"
+#curl -v -X POST "${VITE_SWIFT_SENSORS_API_URL}" \
+#   -H "X-API-Key: ${VITE_SWIFT_SENSORS_API_KEY}" \
+#  -H "Content-Type: text/plain" \
+#  -d "${REFRESHTOKEN}" 
+
+#
+# Make the API call
+curl -v -X POST https://api.swiftsensors.net/api/token/v2/refresh \
+  -H "X-API-Key: ${VITE_SWIFT_SENSORS_API_KEY}" \
+  -H "Content-Type: text/plain" \
+  -H "Authorization: Bearer ${ACCESSTOKEN}"  \
+  -d "${REFRESHTOKEN}" 

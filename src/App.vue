@@ -8,11 +8,12 @@
               <h1 class="text-xl font-bold text-gray-800">SwiftSensors Dashboard</h1>
             </div>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center space-x-4">
+            <span v-if="isAuthenticated" class="text-gray-600">{{ authStore.getUserEmail }}</span>
             <button
               v-if="isAuthenticated"
               @click="handleLogout"
-              class="ml-4 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
             >
               Logout
             </button>

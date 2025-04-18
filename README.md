@@ -37,6 +37,10 @@ no relation to SwiftSensors. Specifically, this application is not supported by 
   - Detailed notification information in modal view
   - Refresh capability for real-time updates
 
+- **Authentication**
+  - Login with CORS handling via proxy
+  - Automatic token refresh and local storage of credentials
+
 ## Screenshot
 <img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
 
@@ -73,9 +77,10 @@ commit local changes to Github, the deployment to gh-pages is happening with the
 from the [develop branch](https://github.com/klaushofrichter/SwiftEventWeb/tree/develop) to the [prod](https://github.com/klaushofrichter/SwiftEventWeb/tree/prod) branch is triggering a Github action to create the `gh-pages` build, so there is no
 need to run `build` and `deploy` locally when a PR is sucessfully merging `develop` to `prod`.  
 
-In order to resolve CORS issues you will need to proxy API calls. One possible configuration is available in the 
-repository, see the [Cloudflare TOML](cors-proxy/wrangler.toml) configuration file and the [worker](cors-proxy/src/index.js) 
-implementation. You will need to register at [Cloudflare](http://cloudflare.com) and acquire a user name and password. 
+In order to resolve CORS issues you will need to proxy API calls. One possible configuration 
+is available in the repository, see the [Cloudflare TOML](cors-proxy/wrangler.toml) configuration 
+file and the [worker](cors-proxy/src/index.js) implementation. You will need to register 
+at [Cloudflare](http://cloudflare.com) and acquire a user name and password. 
 With that, you need to execute these calls for a deployment of the proxy:
 
 ```bash
@@ -84,12 +89,16 @@ wrangler login
 wrangler deploy
 ```
 
-The `wrangler` tools should be installed when running `npm install` initially. Note that `wrangler` may be depreciated 
-at some time. Calling this will create a proxy in the cloudflare environment. The URL of that proxy needs to be defined 
-in the `.env` file. 
+The `wrangler` tools should be installed when running `npm install` initially. Note that 
+`wrangler` may be depreciated at some time. Calling this will create a proxy in the cloudflare 
+environment. The URL of that proxy needs to be defined in the `.env` file. 
 
-To run in Github pages (Production), you will need to create a set of secrets that mirror the `.env` file. Please create 
-these secrets as [Repository/Actions secrets](https://github.com/klaushofrichter/SwiftEventWeb/settings/secrets/actions) 
+It is possible to use the Cloudflar proxy also for local execution by pointing the 
+`VITE_SWIFT_SENSORS_API_HOST` to that proxy instead of the local `vite` proxy. 
+
+To run the application via Github pages (Production), you will need to create a set of secrets that mirror 
+the `.env` file. Please create these secrets as 
+[Repository/Actions secrets](https://github.com/klaushofrichter/SwiftEventWeb/settings/secrets/actions) 
 in your repository, with the same values as given in the `.env` file: 
 
 ```
@@ -103,12 +112,13 @@ This allows Github Pages to operate.
 
 ## Limitations
 
-- There is no realtime event handling or timeseries display. The authentication may expire, it is needed to re-login if that happens. The only way to update values shown is the reload the app.
+- There is no realtime event handling or timeseries display. 
 - The Application is not actively maintained. 
-- The user account that is used for login can not have 2FA enabled. Therefore, in the my.Swiftsensors.net console, 
-  it is recommended to create a sub-user without 2FA if the standard user has 2FA enabled and you are unwilling 
-  to disable this setting. The sub-user might have less access right to compensate for the reduction of security 
-  features. 
+- The user account that is used for login can not have 2FA enabled. Therefore, in the 
+  my.Swiftsensors.net console, it is recommended to create a sub-user without 2FA if the 
+  standard user has 2FA enabled and you are unwilling to disable this setting. The sub-user 
+  might have less access rights to compensate for the reduction of security features. 
+- Credentials are stored locally. Please use `logout` to remove the credentials. 
 
 ## Prerequisites
 
@@ -143,8 +153,8 @@ This allows Github Pages to operate.
    ```
    VITE_SWIFT_SENSORS_API_KEY=your-api-key
    VITE_SWIFT_SENSORS_API_HOST="https://api.swiftsensors.net"
-   VITE_SWIFT_SENSORS_PROXY_API_URL="/api/api/client" # for local execution only
-   VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.swiftsensors.workers.dev/proxy/api/client" # for production only
+   VITE_SWIFT_SENSORS_PROXY_API_URL="/proxy" # for local execution only
+   VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.swiftsensors.workers.dev/proxy" # for use with cloudflare proxy / production
    VITE_SWIFT_SENSORS_PROD_APP_DOMAIN="klaushofrichter.github.io" # for production, needs to be adopted to your domain 
    VITE_SWIFT_SENSORS_USER=your-email-address  # optional 
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional

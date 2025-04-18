@@ -8,10 +8,10 @@ export default defineConfig({
   base: '/SwiftEventWeb/',
   server: {
     proxy: {
-      '/api': {
+      '/proxy': {
         target: 'https://api.swiftsensors.net',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/proxy/, '')
       }
     }
   },
