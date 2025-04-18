@@ -44,6 +44,9 @@ test('login and verify dashboard', async ({ page }) => {
   // Verify dashboard elements are present
   await expect(page.locator('h1')).toContainText('Dashboard');
 
+  // Verify user email is displayed
+  await expect(page.locator('.text-gray-600')).toContainText(username);
+
   // Verify section titles
   await expect(page.locator('h2').filter({ hasText: 'Account Information' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Devices' })).toBeVisible();
