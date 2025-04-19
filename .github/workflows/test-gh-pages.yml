@@ -33,7 +33,7 @@ jobs:
           timeout=300
           interval=10
           elapsed=0
-          url="${{ vars.VITE_SWIFT_SENSORS_PROD_APP_URL }}"
+          url="https://${{ github.repository_owner }}.github.io/SwiftEventWeb"
           
           echo "Waiting for $url to be available..."
           
@@ -51,11 +51,11 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ vars.VITE_SWIFT_SENSORS_PROD_APP_URL }}
+          PLAYWRIGHT_TEST_BASE_URL: https://${{ github.repository_owner }}.github.io/SwiftEventWeb
           VITE_SWIFT_SENSORS_USER: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
           VITE_SWIFT_SENSORS_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }}
           VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
-          VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ vars.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
+          VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ github.repository_owner }}.github.io
           VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ vars.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
         run: npx playwright test
 
