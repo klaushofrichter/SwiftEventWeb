@@ -41,7 +41,7 @@
 
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">Sensors</h2>
+        <h2 class="text-2xl font-bold text-gray-900">Measurements</h2>
         <div class="flex items-center space-x-4">
           <span v-if="lastUpdateTime" class="text-sm text-gray-500 text-right min-w-[150px]">
             Last update: {{ elapsedTime }}
@@ -103,7 +103,7 @@
 
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">Notifications</h2>
+        <h2 class="text-2xl font-bold text-gray-900">Notification Settings</h2>
       </div>
       <div v-if="notificationsLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>

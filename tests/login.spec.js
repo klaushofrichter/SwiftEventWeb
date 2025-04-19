@@ -47,8 +47,8 @@ test('login and verify dashboard', async ({ page }) => {
   // Verify section titles
   await expect(page.locator('h2').filter({ hasText: 'Account Information' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Devices' })).toBeVisible();
-  await expect(page.locator('h2').filter({ hasText: 'Sensors' })).toBeVisible();
-  await expect(page.locator('h2').filter({ hasText: 'Notifications' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Measurements' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Notification Settings' })).toBeVisible();
 
   // Wait for the update button to be visible
   const updateButton = await page.locator('button:has-text("Update")').first();
