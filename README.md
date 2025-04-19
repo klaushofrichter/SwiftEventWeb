@@ -220,6 +220,86 @@ VITE_SWIFT_SENSORS_PASSWORD=your-password
 
 You can run this also as part of the github actions workflow `.github/workflows/test.yaml` against the production deployment. 
 
+## GitHub Actions Workflows
+
+The project uses several GitHub Actions workflows for automation:
+
+### Deployment Workflow (`deploy.yml`)
+- Triggers on push to `prod` branch
+- Builds and deploys the application to GitHub Pages
+- Required secrets:
+  - `VITE_SWIFT_SENSORS_API_KEY`
+  - `VITE_SWIFT_SENSORS_API_HOST`
+  - `VITE_SWIFT_SENSORS_PROD_APP_DOMAIN`
+  - `VITE_SWIFT_SENSORS_PROD_PROXY_API_URL`
+
+### Test Workflow (`test-gh-pages.yml`)
+- Runs Playwright tests against the deployed GitHub Pages site
+- Triggers after successful deployment
+- Required secrets:
+  - `VITE_SWIFT_SENSORS_USER`
+  - `VITE_SWIFT_SENSORS_PASSWORD`
+
+### Package Creation (`package.yml`)
+- Creates a versioned package after successful deployment and tests
+- Generates GitHub release with source code
+- No additional secrets required beyond `GITHUB_TOKEN`
+
+### Notifications
+
+#### Slack Notifications
+The project includes Slack notifications for various events:
+
+1. **Deployment Notifications** (`slack-deployment-notification.yml`)
+   - Sends notification when deployment completes
+   - Includes version, commit info, and deployment URL
+   - Required secret: `SLACK_WEBHOOK_URL`
+
+2. **Test Result Notifications** (`slack-test-notification.yml`)
+   - Notifies about test results (success/failure)
+   - Includes test duration and version info
+   - Required secret: `SLACK_WEBHOOK_URL`
+
+#### GitHub Issue Creation (`create-issue-on-test-failure.yml`)
+- Automatically creates issues for test failures
+- Includes detailed test failure information
+- No additional secrets required
+
+### Setting Up Notifications
+
+1. **Slack Integration**:
+   - Create a Slack App in your workspace
+   - Create an Incoming Webhook
+   - Add the webhook URL as a repository secret:
+     ```
+     SLACK_WEBHOOK_URL=your-webhook-url
+     ```
+
+2. **GitHub Issues**:
+   - No additional setup required
+   - Issues will be created automatically on test failures
+   - Labels used: `bug`, `test-failure`, `needs-attention`
+
+### Workflow Dependencies
+
+The workflows are interconnected:
+1. Deployment workflow runs on push to `prod`
+2. Test workflow runs after successful deployment
+3. Package creation runs after both deployment and tests succeed
+4. Notifications are sent based on workflow results
+
+### Permissions
+
+The workflows require specific GitHub permissions:
+- `contents: write` - For deployments and releases
+- `pages: write` - For GitHub Pages deployment
+- `issues: write` - For creating issues
+- `packages: write` - For package creation
+
+To set up these permissions:
+1. Go to your repository settings
+2. Navigate to Actions > General
+3. Under "Workflow permissions", select "Read and write permissions"
 
 ## License
 

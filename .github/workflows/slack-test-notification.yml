@@ -14,10 +14,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
 
       - name: Get version from package.json
         id: package-version
-        run: echo "VERSION=$(node -p 'require(\"./package.json\").version')" >> $GITHUB_OUTPUT
+        run: |
+          # Get the version from the same commit that was tested
+          VERSION=$(node -p 'require("./package.json").version')
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Prepare commit message
         id: commit-message
