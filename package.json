@@ -1,10 +1,10 @@
 {
   "name": "swifteventweb",
   "private": true,
-  "version": "1.1.22",
+  "version": "1.1.23",
   "type": "module",
   "base": "/SwiftEventWeb/",
-  "last-commit": "Fri Apr 18 18:33:12 CDT 2025",
+  "last-commit": "Fri Apr 18 19:56:15 CDT 2025",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
