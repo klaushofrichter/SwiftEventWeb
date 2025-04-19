@@ -67,8 +67,9 @@ test('login and verify dashboard', async ({ page }) => {
   await expect(updateButton).toBeDisabled();
   
   // Wait for update to complete and verify return to initial state
-  await expect(page.getByText('Update')).toBeVisible();
+  await page.waitForSelector('text=Updating', { state: 'hidden' });
   await expect(updateButton).toBeEnabled();
+  await expect(updateButton).toHaveText(/Update/);
 
   // Verify version is displayed
   const dashboardVersionText = await page.locator('text=Version').last();
