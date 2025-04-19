@@ -1,28 +1,30 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
-  timeout: 60000,
+  workers: 1,
+  reporter: [
+    ['html'],
+    ['list']
+  ],
+  timeout: 120000,
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  expect: {
+    timeout: 30000
+  },
   projects: [
     {
       name: 'chromium',
-      use: { 
-        ...devices['Desktop Chrome'],
-        headless: true,
-        viewport: { width: 1280, height: 720 },
-      },
-    },
+      use: { browserName: 'chromium' },
+    }
   ],
   webServer: {
     command: 'npm run dev',
