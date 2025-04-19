@@ -1,0 +1,51 @@
+name: Create Issue on Test Failure
+
+on:
+  workflow_run:
+    workflows: ["Test with Playwright"]
+    types:
+      - completed
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    permissions:
+      issues: write
+    steps:
+      - name: Create issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const testRun = context.payload.workflow_run;
+            const issueTitle = `🚨 Test Failure: Playwright Tests Failed on ${new Date().toISOString().split('T')[0]}`;
+            const issueBody = `
+            # Test Failure Report
+            
+            The Playwright test workflow has failed.
+            
+            ## Details
+            - **Workflow:** ${testRun.name}
+            - **Run ID:** ${testRun.id}
+            - **Triggered by:** ${testRun.head_commit ? testRun.head_commit.message : 'N/A'}
+            - **Branch:** ${testRun.head_branch}
+            - **Commit:** ${testRun.head_sha}
+            - **Status:** ${testRun.conclusion}
+            - **Run URL:** ${testRun.html_url}
+            
+            ## Next Steps
+            1. Review the test logs in the workflow run
+            2. Check for any recent changes that might have caused the failure
+            3. Fix the failing tests
+            4. Re-run the tests
+            
+            Please investigate and fix the failing tests as soon as possible.
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['bug', 'test-failure', 'needs-attention']
+            }); 
