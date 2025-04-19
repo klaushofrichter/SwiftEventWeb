@@ -60,6 +60,9 @@ test('login and verify dashboard', async ({ page }) => {
   await expect(updateButton).toBeVisible();
   await expect(updateButton).toBeEnabled();
   
+  // Initially, there should be no elapsed time display
+  await expect(page.getByText(/Last update:/)).not.toBeVisible();
+  
   // Click update and verify loading state
   await updateButton.click();
   // Wait for and verify the loading state
@@ -70,6 +73,9 @@ test('login and verify dashboard', async ({ page }) => {
   await page.waitForSelector('text=Updating', { state: 'hidden' });
   await expect(updateButton).toBeEnabled();
   await expect(updateButton).toHaveText(/Update/);
+
+  // Verify elapsed time appears and shows "seconds ago"
+  await expect(page.getByText(/Last update: \d+ seconds? ago/)).toBeVisible();
 
   // Verify version is displayed
   const dashboardVersionText = await page.locator('text=Version').last();
