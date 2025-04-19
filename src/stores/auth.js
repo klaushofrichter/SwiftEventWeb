@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', {
     tokenExpiresAt: null,
     refreshTimer: null,
     email: null,
+    apiKey: null,
     loading: false,
     error: null
   }),
@@ -21,11 +22,12 @@ export const useAuthStore = defineStore('auth', {
       if (!state.tokenExpiresAt) return true;
       return Date.now() >= state.tokenExpiresAt;
     },
-    getUserEmail: (state) => state.email
+    getUserEmail: (state) => state.email,
+    getApiKey: (state) => state.apiKey || import.meta.env.VITE_SWIFT_SENSORS_API_KEY
   },
 
   actions: {
-    async login(email, password) {
+    async login(email, password, apiKey = '') {
       this.loading = true;
       this.error = null;
       try {
@@ -35,6 +37,7 @@ export const useAuthStore = defineStore('auth', {
         this.refreshToken = response.refresh_token;
         this.accountId = response.account_id;
         this.email = email;
+        this.apiKey = apiKey || null; // Store API key if provided
         
         // Calculate token expiration time
         const expiresIn = response.expires_in; // seconds until expiration
@@ -46,6 +49,11 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('accountId', response.account_id);
         localStorage.setItem('tokenExpiresAt', this.tokenExpiresAt.toString());
         localStorage.setItem('email', email);
+        if (apiKey) {
+          localStorage.setItem('apiKey', apiKey);
+        } else {
+          localStorage.removeItem('apiKey');
+        }
 
         // Start refresh timer
         this.startRefreshTimer();
@@ -123,6 +131,7 @@ export const useAuthStore = defineStore('auth', {
       this.accountId = null;
       this.tokenExpiresAt = null;
       this.email = null;
+      this.apiKey = null;
       
       // Clear refresh timer
       if (this.refreshTimer) {
@@ -135,6 +144,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('accountId');
       localStorage.removeItem('tokenExpiresAt');
       localStorage.removeItem('email');
+      localStorage.removeItem('apiKey');
     },
 
     initialize() {
@@ -143,6 +153,7 @@ export const useAuthStore = defineStore('auth', {
       const accountId = localStorage.getItem('accountId');
       const tokenExpiresAt = localStorage.getItem('tokenExpiresAt');
       const email = localStorage.getItem('email');
+      const apiKey = localStorage.getItem('apiKey');
       
       if (token && refreshToken && accountId && tokenExpiresAt) {
         this.token = token;
@@ -150,6 +161,7 @@ export const useAuthStore = defineStore('auth', {
         this.accountId = accountId;
         this.tokenExpiresAt = parseInt(tokenExpiresAt);
         this.email = email;
+        this.apiKey = apiKey || null;
         
         // If token is expired, try to refresh it
         if (this.isTokenExpired) {
