@@ -44,6 +44,7 @@ loginApi.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
     config.headers['X-API-Key'] = authStore.getApiKey;
+    console.log("loginApi config", config);
     return config;
   },
   (error) => {

@@ -31,13 +31,21 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       try {
+        // Store API key first if provided
+        if (apiKey) {
+          this.apiKey = apiKey;
+          localStorage.setItem('apiKey', apiKey);
+        } else {
+          this.apiKey = null;
+          localStorage.removeItem('apiKey');
+        }
+
         const response = await authService.login(email, password);
         this.user = response;
         this.token = response.access_token;
         this.refreshToken = response.refresh_token;
         this.accountId = response.account_id;
         this.email = email;
-        this.apiKey = apiKey || null; // Store API key if provided
         
         // Calculate token expiration time
         const expiresIn = response.expires_in; // seconds until expiration
@@ -49,15 +57,15 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('accountId', response.account_id);
         localStorage.setItem('tokenExpiresAt', this.tokenExpiresAt.toString());
         localStorage.setItem('email', email);
-        if (apiKey) {
-          localStorage.setItem('apiKey', apiKey);
-        } else {
-          localStorage.removeItem('apiKey');
-        }
 
         // Start refresh timer
         this.startRefreshTimer();
       } catch (error) {
+        // If login fails, clear the API key we just set
+        if (apiKey) {
+          this.apiKey = null;
+          localStorage.removeItem('apiKey');
+        }
         this.error = error.message || 'Login failed';
         throw error;
       } finally {

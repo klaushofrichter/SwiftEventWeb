@@ -86,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { getVersion } from '../utils/gitInfo';
@@ -100,6 +100,12 @@ const apiKey = ref('');
 const error = ref('');
 const loading = ref(false);
 const version = ref(getVersion());
+
+// Clear API key when component is mounted
+//onMounted(() => {
+//  authStore.apiKey = null;
+//  localStorage.removeItem('apiKey');
+//});
 
 const login = async () => {
   if (!email.value || !password.value) {

@@ -12,7 +12,12 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 ![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=gh-pages&color=%2333ca55)
 
 
-## Features
+## Application Features
+
+- **Login with email, password and optional API Key**
+  - Overwriting of the default API Key at login time
+  - Local storage of credentials until explict logout
+  - Automatic access token refresh
 
 - **Account Information**
   - View account details
@@ -34,14 +39,13 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Update intervals and activity status
 
 - **Notification Viewing**
-  - View all configured notifications
+  - Listing of all configured notifications
   - Enable/Disable status indicators
   - Detailed notification information in modal view
-  - Refresh capability for real-time updates
+  - Measurement Refresh for real-time updates
 
-- **Authentication**
-  - Login with CORS handling via proxy
-  - Automatic token refresh and local storage of credentials
+- **CORS**
+  - CORS handling via proxy (Vite or Cloudflare)
 
 ## Screenshots
 <img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
@@ -54,9 +58,20 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 - Tailwind CSS for styling
 - Axios for API communication
 
+## Login Procedure
+
+The Swiftsensors API requires an API Key for all calls in the header of the API call. 
+The API Key related to the Account, and any user/password is bound to that API Key. 
+Account owners need to request an API Key from Swiftsensors, it will then be visible 
+in the [Swiftsensors console](https://my.swiftsensors.net/) under Admin/Accounts. 
+
+The API Key can be provided at login time, along with the email and password. It is possible
+to configure a a default API Key in the `.env` file, and subsequently in the Github repository
+secrets. 
+
 ## CORS handling
 
-The application uses different approaches for development and production. 
+The application uses different approaches for development and production:
 
 ### Development
 
@@ -123,7 +138,7 @@ This allows Github Pages to operate.
   might have less access rights to compensate for the reduction of security features. 
 - Credentials are stored locally. Please use `logout` to remove the credentials. 
 
-## Prerequisites
+## Development and Deployment Prerequisites
 
 - Node.js (v14 or higher)
 - npm or yarn
