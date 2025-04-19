@@ -2,6 +2,9 @@ name: Test Branch with Playwright against Vite Server
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - prod
 
 jobs:
 
