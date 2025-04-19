@@ -1,4 +1,4 @@
-name: Test with Playwright
+name: Test GH Pages with Playwright
 
 on:
   workflow_run:
