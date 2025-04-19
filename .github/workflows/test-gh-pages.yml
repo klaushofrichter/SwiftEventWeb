@@ -10,28 +10,58 @@ on:
 
 jobs:
   test:
-    # Only run if the deployment was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright
-        run: npx playwright install chromium
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Wait for deployment to be available
+        run: |
+          # Wait up to 5 minutes for the deployment
+          timeout=300
+          interval=10
+          elapsed=0
+          url="${{ vars.VITE_SWIFT_SENSORS_PROD_APP_URL }}"
+          
+          echo "Waiting for $url to be available..."
+          
+          until curl --output /dev/null --silent --head --fail "$url"; do
+            if [ $elapsed -ge $timeout ]; then
+              echo "Timeout waiting for deployment"
+              exit 1
+            fi
+            sleep $interval
+            elapsed=$((elapsed + interval))
+            echo "Still waiting... ($elapsed seconds elapsed)"
+          done
+          
+          echo "Deployment is available!"
 
       - name: Run Playwright tests
-        run: npx playwright test
         env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ vars.VITE_SWIFT_SENSORS_PROD_APP_URL }}
           VITE_SWIFT_SENSORS_USER: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
           VITE_SWIFT_SENSORS_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }}
-          PLAYWRIGHT_TEST_BASE_URL: https://klaushofrichter.github.io/SwiftEventWeb 
+          VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
+          VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ vars.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
+          VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ vars.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30 
