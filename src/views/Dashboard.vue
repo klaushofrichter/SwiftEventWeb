@@ -14,6 +14,7 @@
         <div class="mt-2 space-y-1">
           <p class="text-sm text-gray-500">Created: {{ formatDate(accountInfo?.creationTime) }}</p>
           <p class="text-sm text-gray-500">Time Zone: {{ accountInfo?.timeZone?.timeZoneId }} ({{ accountInfo?.timeZone?.offsetDisplay }})</p>
+          <p class="text-sm text-gray-500">Email: {{ authStore.getUserEmail }}</p>
         </div>
       </div>
     </div>
