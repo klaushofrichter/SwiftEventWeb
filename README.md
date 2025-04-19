@@ -53,10 +53,10 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 
 ## Technology Stack
 
-- Vue 3 with Composition API
-- Pinia for state management
-- Tailwind CSS for styling
-- Axios for API communication
+- [Vue 3](https://vuejs.org/) with Composition API
+- [Pinia](https://pinia.vuejs.org/) for state management
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Axios](https://axios-http.com/) for API communication
 
 ## Login Procedure
 
