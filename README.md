@@ -1,15 +1,15 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for monitoring a SwiftSensors account and its sensors. 
+A Vue 3 web application for viewing a SwiftSensors account and its sensors. 
 This application was build using [Cursor](https://Cursor.com) on MacOS 15.4 and Windows 11. The application is using
 the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) but has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported or endosed by SwiftSensors. 
 
-![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
-![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL)
-![Dev Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fdevelop%2Fpackage.json&query=version&label=Dev%20Version&color=%2333ca55)
-![Prod Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fprod%2Fpackage.json&query=version&label=Prod%20Version&color=%2333ca55)
-![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=GH-Pages%20Version&color=%2333ca55)
+![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages) 
+![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL) 
+![Dev Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fdevelop%2Fpackage.json&query=version&label=develop&color=%2333ca55) 
+![Prod Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fprod%2Fpackage.json&query=version&label=prod&color=%2333ca55) 
+![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=gh-pages&color=%2333ca55)
 
 
 ## Features
