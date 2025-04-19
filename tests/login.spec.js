@@ -47,7 +47,7 @@ test('login and verify dashboard', async ({ page }) => {
   // Verify section titles
   await expect(page.locator('h2').filter({ hasText: 'Account Information' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Devices' })).toBeVisible();
-  await expect(page.locator('h2').filter({ hasText: 'Measurements' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Metrics' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notification Settings' })).toBeVisible();
 
   // Wait for the update button to be visible
@@ -146,7 +146,7 @@ test('verify login with custom API key and logout', async ({ page }) => {
   // Verify section titles
   await expect(page.locator('h2').filter({ hasText: 'Account Information' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Devices' })).toBeVisible();
-  await expect(page.locator('h2').filter({ hasText: 'Measurements' })).toBeVisible();
+  await expect(page.locator('h2').filter({ hasText: 'Metrics' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notification Settings' })).toBeVisible();
 
   // Click the logout button (assuming it's in the navigation)
