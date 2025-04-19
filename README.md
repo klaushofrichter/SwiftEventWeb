@@ -19,7 +19,7 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Local storage of credentials until explict logout
   - Automatic access token refresh
 
-- **Account Information**
+- **Account Information Viewing**
   - View account details
   - Display account timezone and creation time
 
@@ -28,7 +28,7 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Monitor device status, battery levels, and signal strength
   - Track last contact time for each device
 
-- **Sensor Monitoring**
+- **Metric Viewing**
   - Display of sensor data
   - Support for multiple metric types, including:
     - Temperature sensors (°C of F)
