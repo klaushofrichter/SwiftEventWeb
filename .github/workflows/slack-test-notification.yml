@@ -1,0 +1,110 @@
+name: Slack Notification for Test Results
+
+on:
+  workflow_run:
+    workflows: ["Test with Playwright"]
+    types:
+      - completed
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Get version from package.json
+        id: package-version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Prepare commit message
+        id: commit-message
+        run: |
+          message="${{ github.event.workflow_run.head_commit.message }}"
+          # Replace newlines with spaces and escape quotes
+          message="${message//$'\n'/ }"
+          message="${message//\"/\\\"}"
+          echo "MESSAGE=$message" >> $GITHUB_OUTPUT
+
+      - name: Calculate duration
+        id: duration
+        run: |
+          start="${{ github.event.workflow_run.run_started_at }}"
+          end="${{ github.event.workflow_run.updated_at }}"
+          if [ -n "$start" ] && [ -n "$end" ]; then
+            start_sec=$(date -d "$start" +%s)
+            end_sec=$(date -d "$end" +%s)
+            duration=$((($end_sec - $start_sec) / 60))
+            echo "DURATION=$duration" >> $GITHUB_OUTPUT
+          else
+            echo "DURATION=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ github.event.workflow_run.conclusion == 'success' && '✅ Tests Passed' || '❌ Tests Failed' }} (v${{ steps.package-version.outputs.VERSION }})",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.event.workflow_run.head_branch }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Version:* v${{ steps.package-version.outputs.VERSION }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Status:* ${{ github.event.workflow_run.conclusion }}\n*Duration:* ${{ steps.duration.outputs.DURATION }} minutes"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Commit Message:* ${{ steps.commit-message.outputs.MESSAGE }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Workflow Run:* <${{ github.event.workflow_run.html_url }}|View Test Details>"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Test completed at: ${{ github.event.workflow_run.updated_at }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK 
