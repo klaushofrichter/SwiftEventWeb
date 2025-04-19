@@ -42,20 +42,25 @@
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-900">Sensors</h2>
-        <button
-          @click="refreshSensors"
-          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          :disabled="sensorsLoading"
-        >
-          <span v-if="sensorsLoading" class="inline-flex items-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Updating
+        <div class="flex items-center space-x-4">
+          <span v-if="lastUpdateTime" class="text-sm text-gray-500">
+            Last update: {{ elapsedTime }}
           </span>
-          <span v-else>Update</span>
-        </button>
+          <button
+            @click="refreshSensors"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            :disabled="sensorsLoading"
+          >
+            <span v-if="sensorsLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Updating
+            </span>
+            <span v-else>Update</span>
+          </button>
+        </div>
       </div>
       <div v-if="sensorsError" class="text-red-500 text-center">
         {{ sensorsError }}
@@ -180,7 +185,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, onUnmounted } from 'vue';
 import { useDataStore } from '../stores/data';
 import { useAuthStore } from '../stores/auth';
 import packageJson from '../../package.json';
@@ -201,6 +206,9 @@ const devicesError = ref(null);
 const sensorsError = ref(null);
 const notificationsError = ref(null);
 const selectedNotification = ref(null);
+const lastUpdateTime = ref(null);
+const elapsedTime = ref('');
+let timer = null;
 
 const devices = ref([]);
 const notifications = ref([]);
@@ -269,6 +277,9 @@ const fetchData = async () => {
   try {
     await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
+    // Set lastUpdateTime when sensors are first loaded
+    lastUpdateTime.value = Date.now();
+    updateElapsedTime();
   } catch (err) {
     sensorsError.value = err.msg || 'Failed to fetch sensors';
   } finally {
@@ -301,14 +312,44 @@ const closeModal = () => {
   dataStore.clearSelectedNotification();
 };
 
+const updateElapsedTime = () => {
+  if (!lastUpdateTime.value) {
+    elapsedTime.value = '';
+    return;
+  }
+  
+  const now = Date.now();
+  const diff = now - lastUpdateTime.value;
+  const seconds = Math.floor(diff / 1000);
+  
+  if (seconds < 10) {
+    elapsedTime.value = 'just now';
+  } else if (seconds < 60) {
+    // Round to nearest 10 seconds
+    const roundedSeconds = Math.round(seconds / 10) * 10;
+    elapsedTime.value = `about ${roundedSeconds} seconds ago`;
+  } else if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    elapsedTime.value = `about ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else {
+    const hours = Math.floor(seconds / 3600);
+    elapsedTime.value = `about ${hours} hour${hours > 1 ? 's' : ''} ago`;
+  }
+};
+
 const refreshSensors = async () => {
   sensorsError.value = null;
   sensorsLoading.value = true;
+  // Hide the timer display while updating
+  lastUpdateTime.value = null;
   try {
     // Fetch new data but keep current display
     const newSensors = await dataStore.fetchSensors();
     // Only update display after successful fetch
     sensors.value = dataStore.sensors;
+    // Show the timer display again with new timestamp
+    lastUpdateTime.value = Date.now();
+    updateElapsedTime();
   } catch (err) {
     sensorsError.value = err.msg || 'Failed to fetch sensors';
   } finally {
@@ -318,5 +359,15 @@ const refreshSensors = async () => {
 
 onMounted(() => {
   fetchData();
+  // Start the timer to update elapsed time every second
+  timer = setInterval(updateElapsedTime, 1000);
+});
+
+onUnmounted(() => {
+  // Clean up the timer when component is unmounted
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
 });
 </script> 
