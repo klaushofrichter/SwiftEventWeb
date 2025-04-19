@@ -30,8 +30,20 @@
               type="password"
               autocomplete="current-password"
               required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
+            />
+          </div>
+          <div>
+            <label for="api-key" class="sr-only">API Key (optional)</label>
+            <input
+              id="api-key"
+              v-model="apiKey"
+              name="api-key"
+              type="password"
+              autocomplete="off"
+              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="API Key (optional)"
             />
           </div>
         </div>
@@ -74,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { getVersion } from '../utils/gitInfo';
@@ -84,9 +96,16 @@ const authStore = useAuthStore();
 
 const email = ref('');
 const password = ref('');
+const apiKey = ref('');
 const error = ref('');
 const loading = ref(false);
 const version = ref(getVersion());
+
+// Clear API key when component is mounted
+//onMounted(() => {
+//  authStore.apiKey = null;
+//  localStorage.removeItem('apiKey');
+//});
 
 const login = async () => {
   if (!email.value || !password.value) {
@@ -98,7 +117,7 @@ const login = async () => {
   error.value = '';
 
   try {
-    await authStore.login(email.value, password.value);
+    await authStore.login(email.value, password.value, apiKey.value);
     router.push('/');
   } catch (err) {
     error.value = err.message || 'Login failed. Please check your credentials.';

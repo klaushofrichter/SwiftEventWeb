@@ -12,7 +12,12 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 ![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=gh-pages&color=%2333ca55)
 
 
-## Features
+## Application Features
+
+- **Login with email, password and optional API Key**
+  - Overwriting of the default API Key at login time
+  - Local storage of credentials until explict logout
+  - Automatic access token refresh
 
 - **Account Information**
   - View account details
@@ -34,18 +39,17 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Update intervals and activity status
 
 - **Notification Viewing**
-  - View all configured notifications
+  - Listing of all configured notifications
   - Enable/Disable status indicators
   - Detailed notification information in modal view
-  - Refresh capability for real-time updates
+  - Measurement Refresh for real-time updates
 
-- **Authentication**
-  - Login with CORS handling via proxy
-  - Automatic token refresh and local storage of credentials
+- **CORS**
+  - CORS handling via proxy ([Vite](https://vite.dev/) or [Cloudflare](https://www.cloudflare.com/))
 
 ## Screenshots
 <img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
-<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="25%" /> <img src="/public/swiftsensorsmobile2.png" alt="SwiftSensors Mobile Dashboard" width="25%" />
+<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="25%" /><img src="/public/swiftsensorsmobile2.png" alt="SwiftSensors Mobile Dashboard" width="25%" />
 
 ## Technology Stack
 
@@ -54,9 +58,20 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 - Tailwind CSS for styling
 - Axios for API communication
 
+## Login Procedure
+
+The Swiftsensors API requires an API Key for all calls in the header of the API call. 
+The API Key related to the Account, and any user/password is bound to that API Key. 
+Account owners need to request an API Key from Swiftsensors, it will then be visible 
+in the [Swiftsensors console](https://my.swiftsensors.net/) under Admin/Accounts. 
+
+The API Key can be provided at login time, along with the email and password. It is possible
+to configure a a default API Key in the `.env` file, and subsequently in the Github repository
+secrets. 
+
 ## CORS handling
 
-The application uses different approaches for development and production. 
+The application uses different approaches for development and production:
 
 ### Development
 
@@ -123,7 +138,7 @@ This allows Github Pages to operate.
   might have less access rights to compensate for the reduction of security features. 
 - Credentials are stored locally. Please use `logout` to remove the credentials. 
 
-## Prerequisites
+## Development and Deployment Prerequisites
 
 - Node.js (v14 or higher)
 - npm or yarn
@@ -190,8 +205,8 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 
 ## Testing
 
-There are two types of tests: a local API test using `./test_api.sh` and a Playwright test of the Application, locally or in production. To run these 
-locally you need to provide valid credentials in the `.env ` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD`. 
+There are two types of tests: a local API test using `./test_api.sh` and a set of [Playwright[(https://playwright.dev/)] tests of the Application, locally or in production. To run these 
+locally you need to provide valid credentials in the `.env ` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD` or as repository secrets.
 
 Local API test: `test_api.sh`: this is a simple CURL script that tests the credentials by
 retrieving an access token from the Swiftsensors API. Just call the script
@@ -221,7 +236,7 @@ VITE_SWIFT_SENSORS_USER=your-email-address
 VITE_SWIFT_SENSORS_PASSWORD=your-password
 ```
 
-You can run this also as part of the github actions workflow `.github/workflows/test.yaml` against the production deployment. 
+You can run this also as part of the github actions workflow `.github/workflows/test-develop.yml` or `.github/workflows/test-gh-pages.yml` against the production deployment on Github Pages. 
 
 ## GitHub Actions Workflows
 

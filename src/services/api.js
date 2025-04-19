@@ -13,7 +13,6 @@ const baseURL = isProduction
 const loginApi = axios.create({
   baseURL,
   headers: {
-    'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
     'Content-Type': 'application/json'
   }
 });
@@ -21,18 +20,31 @@ const loginApi = axios.create({
 const api = axios.create({
   baseURL,
   headers: {
-    'X-API-Key': import.meta.env.VITE_SWIFT_SENSORS_API_KEY,
     'Content-Type': 'application/json'
   }
 });
 
-// Add request interceptor to include bearer token for all requests
+// Add request interceptor to include bearer token and API key for all requests
 api.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
     if (authStore.token) {
       config.headers.Authorization = `Bearer ${authStore.token}`;
     }
+    config.headers['X-API-Key'] = authStore.getApiKey;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add request interceptor for login API to include API key
+loginApi.interceptors.request.use(
+  (config) => {
+    const authStore = useAuthStore();
+    config.headers['X-API-Key'] = authStore.getApiKey;
+    console.log("loginApi config", config);
     return config;
   },
   (error) => {
