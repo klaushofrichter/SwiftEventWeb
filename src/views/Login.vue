@@ -80,6 +80,13 @@
       </form>
       <div class="text-center text-sm text-gray-500">
         Version {{ version }}
+        <span class="mx-1">·</span>
+        <a href="https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="text-indigo-600 hover:text-indigo-800">
+          README
+        </a>
       </div>
     </div>
   </div>

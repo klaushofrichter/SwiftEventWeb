@@ -16,11 +16,18 @@ test('login and verify dashboard', async ({ page }) => {
   // Navigate to login page
   await page.goto(process.env.PLAYWRIGHT_TEST_BASE_URL || '/');
 
-  // Verify version information is present 
+  // Verify version information and README link are present
   const versionElement = await page.locator('text=/Version|version/i').first();
   expect(versionElement).toBeVisible();
   const versionText = await versionElement.textContent();
   expect(versionText).toMatch(/\d+\.\d+\.\d+ .*/);
+
+  // Verify README link exists and has correct attributes
+  const readmeLink = await page.locator('a:has-text("README")');
+  await expect(readmeLink).toBeVisible();
+  await expect(readmeLink).toHaveAttribute('href', 'https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md');
+  await expect(readmeLink).toHaveAttribute('target', '_blank');
+  await expect(readmeLink).toHaveAttribute('rel', 'noopener noreferrer');
  
   // Wait for the login form to be visible
   await page.waitForSelector('form');
