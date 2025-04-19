@@ -55,6 +55,12 @@ test('login and verify dashboard', async ({ page }) => {
   await expect(page.locator('h2').filter({ hasText: 'Sensors' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notifications' })).toBeVisible();
 
+  // Verify version is displayed
+  const dashboardVersionText = await page.locator('text=Version').last();
+  await expect(dashboardVersionText).toBeVisible();
+  const fullDashboardVersion = await dashboardVersionText.textContent();
+  expect(fullDashboardVersion).toMatch(/Version \d+\.\d+\.\d+ \(.*\d{4}\)/);
+
   // Verify loading states are not present
   await expect(page.locator('text=Loading...')).not.toBeVisible();
   await expect(page.locator('text=Failed to fetch')).not.toBeVisible();

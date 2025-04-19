@@ -1,25 +1,20 @@
-name: Test Production Build
+name: Test Branch with Playwright against Vite Server
 
 on:
-  workflow_run:
-    workflows: ["CodeQL Analysis"]
-    types:
-      - completed
+  workflow_dispatch:
+  pull_request:
     branches:
       - prod
-  workflow_dispatch:
 
 jobs:
+
   test:
-    # Only run if the CodeQL workflow was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
       VITE_SWIFT_SENSORS_USER: ${{ secrets.VITE_SWIFT_SENSORS_USER }}
       VITE_SWIFT_SENSORS_PASSWORD: ${{ secrets.VITE_SWIFT_SENSORS_PASSWORD }}
       VITE_SWIFT_SENSORS_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROXY_API_URL }}
-      VITE_SWIFT_SENSORS_PROD_PROXY_API_URL: ${{ secrets.VITE_SWIFT_SENSORS_PROD_PROXY_API_URL }}
       VITE_SWIFT_SENSORS_PROD_APP_DOMAIN: ${{ secrets.VITE_SWIFT_SENSORS_PROD_APP_DOMAIN }}
       PLAYWRIGHT_TEST_BASE_URL: http://localhost:4173
 
