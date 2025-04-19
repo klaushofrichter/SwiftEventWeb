@@ -1,18 +1,13 @@
-name: Test Production Build
+name: Test Develop Branch
 
 on:
-  workflow_run:
-    workflows: ["CodeQL Analysis"]
-    types:
-      - completed
+  push:
     branches:
-      - prod
+      - develop
   workflow_dispatch:
 
 jobs:
   test:
-    # Only run if the CodeQL workflow was successful
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       VITE_SWIFT_SENSORS_API_KEY: ${{ secrets.VITE_SWIFT_SENSORS_API_KEY }}
