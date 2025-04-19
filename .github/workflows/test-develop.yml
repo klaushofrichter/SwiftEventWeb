@@ -1,9 +1,6 @@
 name: Test Develop Branch before merging into Prod
 
 on:
-  pull_request:
-    branches:
-      - prod
   workflow_dispatch:
 
 jobs:
