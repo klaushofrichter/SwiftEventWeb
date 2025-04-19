@@ -2,7 +2,7 @@ name: Create Issue on Test Failure
 
 on:
   workflow_run:
-    workflows: ["Test with Playwright"]
+    workflows: ["Test GH Pages with Playwright"]
     types:
       - completed
 

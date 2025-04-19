@@ -2,7 +2,7 @@ name: Slack Notification for Test Results
 
 on:
   workflow_run:
-    workflows: ["Test with Playwright"]
+    workflows: ["Test GH Pages with Playwright"]
     types:
       - completed
 
