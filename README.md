@@ -43,7 +43,7 @@ no relation to SwiftSensors. Specifically, this application is not supported by 
 
 ## Screenshots
 <img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
-<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="50%" />
+<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="25%" />
 
 ## Technology Stack
 
