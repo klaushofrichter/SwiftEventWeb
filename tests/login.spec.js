@@ -55,6 +55,22 @@ test('login and verify dashboard', async ({ page }) => {
   await expect(page.locator('h2').filter({ hasText: 'Sensors' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notifications' })).toBeVisible();
 
+  // Verify sensor update functionality
+  const updateButton = page.getByRole('button', { name: /Update|Updating/ });
+  await expect(updateButton).toBeVisible();
+  await expect(updateButton).toBeEnabled();
+  
+  // Click update and verify loading state
+  await updateButton.click();
+  // Wait for and verify the loading state
+  await expect(page.getByText('Updating')).toBeVisible();
+  await expect(updateButton).toBeDisabled();
+  
+  // Wait for update to complete and verify return to initial state
+  await page.waitForSelector('text=Updating', { state: 'hidden' });
+  await expect(updateButton).toBeEnabled();
+  await expect(updateButton).toHaveText(/Update/);
+
   // Verify version is displayed
   const dashboardVersionText = await page.locator('text=Version').last();
   await expect(dashboardVersionText).toBeVisible();

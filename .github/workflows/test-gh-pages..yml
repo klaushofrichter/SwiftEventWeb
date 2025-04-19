@@ -12,11 +12,11 @@ on:
       environment:
         description: 'Environment to test against'
         required: true
-        default: 'production'
+        default: 'develop'
         type: choice
         options:
-          - production
-          - staging
+          - develop
+          - prod
 
 jobs:
   test:
