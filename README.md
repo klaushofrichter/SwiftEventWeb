@@ -19,7 +19,7 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Local storage of credentials until explict logout
   - Automatic access token refresh
 
-- **Account Information**
+- **Account Information Viewing**
   - View account details
   - Display account timezone and creation time
 
@@ -28,7 +28,7 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
   - Monitor device status, battery levels, and signal strength
   - Track last contact time for each device
 
-- **Sensor Monitoring**
+- **Metric Viewing**
   - Display of sensor data
   - Support for multiple metric types, including:
     - Temperature sensors (°C of F)
@@ -53,10 +53,10 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 
 ## Technology Stack
 
-- Vue 3 with Composition API
-- Pinia for state management
-- Tailwind CSS for styling
-- Axios for API communication
+- [Vue 3](https://vuejs.org/) with Composition API
+- [Pinia](https://pinia.vuejs.org/) for state management
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Axios](https://axios-http.com/) for API communication
 
 ## Login Procedure
 
