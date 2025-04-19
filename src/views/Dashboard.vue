@@ -158,6 +158,11 @@
         </div>
       </div>
     </div>
+
+    <!-- Version Display -->
+    <div class="mt-8 text-center">
+      <p class="text-xs text-gray-400">Version {{ version }} ({{ lastCommit }})</p>
+    </div>
   </div>
 </template>
 
@@ -165,6 +170,10 @@
 import { onMounted, ref, computed } from 'vue';
 import { useDataStore } from '../stores/data';
 import { useAuthStore } from '../stores/auth';
+import packageJson from '../../package.json';
+
+const version = packageJson.version;
+const lastCommit = packageJson["last-commit"];
 
 const dataStore = useDataStore();
 const authStore = useAuthStore();
