@@ -7,16 +7,6 @@ on:
       - completed
     branches:
       - prod
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to test against'
-        required: true
-        default: 'develop'
-        type: choice
-        options:
-          - develop
-          - prod
 
 jobs:
   test:
