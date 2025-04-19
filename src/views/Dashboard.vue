@@ -41,7 +41,7 @@
 
     <div class="bg-white shadow rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-gray-900">Measurements</h2>
+        <h2 class="text-2xl font-bold text-gray-900">Metrics</h2>
         <div class="flex items-center space-x-4">
           <span v-if="lastUpdateTime" class="text-sm text-gray-500 text-right min-w-[150px]">
             Last update: {{ elapsedTime }}
