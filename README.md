@@ -1,8 +1,8 @@
 # SwiftSensors Web Application
 
 A Vue 3 web application for monitoring and managing SwiftSensors devices, sensors, and notifications. 
-This application was build using Cursor.com on MacOS 15.4 and Windows 11. The application was build 
-based on the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) and has other than that 
+This application was build using Cursor.com on MacOS 15.4 and Windows 11. The application using
+the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) but has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
@@ -41,8 +41,9 @@ no relation to SwiftSensors. Specifically, this application is not supported by 
   - Login with CORS handling via proxy
   - Automatic token refresh and local storage of credentials
 
-## Screenshot
+## Screenshots
 <img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
+<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="25%" /> <img src="/public/swiftsensorsmobile2.png" alt="SwiftSensors Mobile Dashboard" width="25%" />
 
 ## Technology Stack
 

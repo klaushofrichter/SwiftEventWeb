@@ -56,7 +56,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.event.workflow_run.conclusion == 'success' && '✅ Tests Passed' || '❌ Tests Failed' }} (v${{ steps.package-version.outputs.VERSION }})",
+                    "text": "${{ github.event.workflow_run.conclusion == 'success' && '✅ GH Pages Tests Passed' || '❌ GH Pages Tests Failed' }} (v${{ steps.package-version.outputs.VERSION }})",
                     "emoji": true
                   }
                 },

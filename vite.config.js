@@ -1,10 +1,20 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import pkg from './package.json'
+import { execSync } from 'child_process'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    {
+      name: 'prepare-package-json',
+      closeBundle: async () => {
+        // Run our script after the bundle is created
+        execSync('node scripts/prepare-dist-package.js', { stdio: 'inherit' })
+      }
+    }
+  ],
   base: '/SwiftEventWeb/',
   server: {
     proxy: {
