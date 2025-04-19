@@ -9,7 +9,7 @@ no relation to SwiftSensors. Specifically, this application is not supported by 
 ![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL)
 ![Dev Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fdevelop%2Fpackage.json&query=version&label=Dev%20Version&color=%2333ca55)
 ![Prod Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fprod%2Fpackage.json&query=version&label=Prod%20Version&color=%2333ca55)
-![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=GH-Pages%20Version%20Version&color=%2333ca55)
+![GH Pages Version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fklaushofrichter%2FSwiftEventWeb%2Frefs%2Fheads%2Fgh-pages%2Fpackage.json&query=version&label=GH-Pages%20Version&color=%2333ca55)
 
 
 ## Features
