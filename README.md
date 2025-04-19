@@ -3,7 +3,7 @@
 A Vue 3 web application for monitoring a SwiftSensors account and its sensors. 
 This application was build using [Cursor](https://Cursor.com) on MacOS 15.4 and Windows 11. The application using
 the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) but has other than that 
-no relation to SwiftSensors. Specifically, this application is not supported by SwiftSensors. 
+no relation to SwiftSensors. Specifically, this application is not supported or endosed by SwiftSensors. 
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages)
 ![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL)
