@@ -20,6 +20,15 @@ jobs:
         id: package-version
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
+      - name: Prepare commit message
+        id: commit-message
+        run: |
+          message="${{ github.event.workflow_run.head_commit.message }}"
+          # Replace newlines with spaces and escape quotes
+          message="${message//$'\n'/ }"
+          message="${message//\"/\\\"}"
+          echo "MESSAGE=$message" >> $GITHUB_OUTPUT
+
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
@@ -52,7 +61,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Commit Message:* ${{ github.event.workflow_run.head_commit.message || 'N/A' }}"
+                    "text": "*Commit Message:* ${{ steps.commit-message.outputs.MESSAGE }}"
                   }
                 },
                 {
