@@ -57,6 +57,13 @@ test('login and verify dashboard', async ({ page }) => {
   await expect(page.locator('h2').filter({ hasText: 'Metrics' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notification Settings' })).toBeVisible();
 
+  // Verify README link exists and has correct attributes on dashboard
+  const dashboardReadmeLink = await page.locator('a:has-text("README")');
+  await expect(dashboardReadmeLink).toBeVisible();
+  await expect(dashboardReadmeLink).toHaveAttribute('href', 'https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md');
+  await expect(dashboardReadmeLink).toHaveAttribute('target', '_blank');
+  await expect(dashboardReadmeLink).toHaveAttribute('rel', 'noopener noreferrer');
+
   // Wait for the update button to be visible
   const updateButton = await page.locator('button:has-text("Update")').first();
   await updateButton.waitFor({ state: 'visible', timeout: 10000 });
@@ -156,6 +163,13 @@ test('verify login with custom API key and logout', async ({ page }) => {
   await expect(page.locator('h2').filter({ hasText: 'Metrics' })).toBeVisible();
   await expect(page.locator('h2').filter({ hasText: 'Notification Settings' })).toBeVisible();
 
+  // Verify README link exists and has correct attributes on dashboard
+  const dashboardReadmeLink = await page.locator('a:has-text("README")');
+  await expect(dashboardReadmeLink).toBeVisible();
+  await expect(dashboardReadmeLink).toHaveAttribute('href', 'https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md');
+  await expect(dashboardReadmeLink).toHaveAttribute('target', '_blank');
+  await expect(dashboardReadmeLink).toHaveAttribute('rel', 'noopener noreferrer');
+
   // Click the logout button (assuming it's in the navigation)
   await page.locator('button:has-text("Logout")').click();
 
@@ -168,4 +182,48 @@ test('verify login with custom API key and logout', async ({ page }) => {
   await expect(page.locator('input[name="email"]')).toBeEmpty();
   await expect(page.locator('input[name="password"]')).toBeEmpty();
   await expect(page.locator('input[name="api-key"]')).toBeEmpty();
+});
+
+test('verify README link is valid and accessible', async ({ page, request }) => {
+  // Navigate to login page
+  await page.goto(process.env.PLAYWRIGHT_TEST_BASE_URL || '/');
+
+  // Get the README link
+  const readmeLink = await page.locator('a:has-text("README")');
+  await expect(readmeLink).toBeVisible();
+  
+  // Get the href attribute
+  const href = await readmeLink.getAttribute('href');
+  expect(href).toBe('https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md');
+
+  // Verify the link is accessible
+  const response = await request.get(href);
+  expect(response.ok()).toBeTruthy();
+  expect(response.status()).toBe(200);
+
+  // Navigate to dashboard (need to login first)
+  const username = process.env.VITE_SWIFT_SENSORS_USER;
+  const password = process.env.VITE_SWIFT_SENSORS_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error('Missing required environment variables: VITE_SWIFT_SENSORS_USER and VITE_SWIFT_SENSORS_PASSWORD');
+  }
+
+  await page.locator('input[name="email"]').fill(username);
+  await page.locator('input[name="password"]').fill(password);
+  await page.locator('button[type="submit"]').click();
+  await page.waitForURL('**/dashboard', { timeout: 60000 });
+
+  // Check README link on dashboard
+  const dashboardReadmeLink = await page.locator('a:has-text("README")');
+  await expect(dashboardReadmeLink).toBeVisible();
+  
+  // Verify dashboard README link
+  const dashboardHref = await dashboardReadmeLink.getAttribute('href');
+  expect(dashboardHref).toBe('https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md');
+
+  // Verify the dashboard link is also accessible
+  const dashboardResponse = await request.get(dashboardHref);
+  expect(dashboardResponse.ok()).toBeTruthy();
+  expect(dashboardResponse.status()).toBe(200);
 }); 
