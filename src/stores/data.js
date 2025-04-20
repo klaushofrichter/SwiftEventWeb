@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { sensorService, notificationService, deviceService, accountService } from '../services/api';
+import { sensorService, notificationService, deviceService, accountService, eagleEyeService } from '../services/api';
 import { useAuthStore } from './auth';
 
 export const useDataStore = defineStore('data', {
@@ -10,11 +10,15 @@ export const useDataStore = defineStore('data', {
     selectedNotification: null,
     accountInfo: null,
     loading: false,
-    error: null
+    error: null,
+    eagleEyeUsername: null,
+    eagleEyeCameras: null
   }),
 
   getters: {
     getAccountInfo: (state) => state.accountInfo,
+    getEagleEyeUsername: (state) => state.eagleEyeUsername,
+    getEagleEyeCameras: (state) => state.eagleEyeCameras,
   },
 
   actions: {
@@ -108,6 +112,35 @@ export const useDataStore = defineStore('data', {
       } catch (error) {
         this.error = error.message || 'Failed to fetch devices';
         throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    clearEagleEyeUsername() {
+      this.eagleEyeUsername = null;
+    },
+
+    clearEagleEyeCameras() {
+      this.eagleEyeCameras = null;
+    },
+
+    async fetchEagleEyeCameras(refresh = false) {
+      const authStore = useAuthStore();
+      if (!authStore.accountId) {
+        console.error('No account ID available');
+        return;
+      }
+
+      try {
+        this.loading = true;
+        this.error = null;
+        const cameras = await eagleEyeService.getCameras(authStore.accountId, refresh);
+        this.eagleEyeCameras = cameras;
+      } catch (error) {
+        console.error('Error fetching Eagle Eye cameras:', error);
+        this.error = error.message || 'Failed to fetch Eagle Eye cameras';
+        this.eagleEyeCameras = null;
       } finally {
         this.loading = false;
       }

@@ -74,7 +74,6 @@ export const authService = {
           'Authorization': `Bearer ${authStore.token}`
         }
       });
-      console.log("refreshToken response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -101,6 +100,15 @@ export const sensorService = {
     } catch (error) {
       throw error.response?.data || error;
     }
+  },
+
+  getSensorDetails: async (accountId, sensorId) => {
+    try {
+      const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/${sensorId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
   }
 };
 
@@ -121,6 +129,19 @@ export const notificationService = {
     } catch (error) {
       throw error.response?.data || error;
     }
+  },
+
+  testNotification: async (accountId, notificationId) => {
+    try {
+      const response = await api.post(`/api/client/v1/accounts/${accountId}/notifications/${notificationId}/test`);
+      return; // No response body needed as per API spec
+    } catch (error) {
+      console.error("testNotification error", error);
+      if (error.response) {
+        throw error.response.data;
+      }
+      throw error;
+    }
   }
 };
 
@@ -129,6 +150,55 @@ export const deviceService = {
     try {
       const response = await api.get(`/api/client/v1/accounts/${accountId}/deviceAll?includeSubAccounts=false`);
       return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  }
+};
+
+export const eagleEyeService = {
+  creds: async (accountId) => {
+    try {
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/creds`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  testCreds: async (accountId) => {
+    try {
+      const response = await api.post(`/api/client/v1/accounts/${accountId}/eagleeye/creds/test`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  getCameras: async (accountId, refresh = false) => {
+    try {
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras`, {
+        params: { refresh }
+      });
+      return response.data || null; // Return null if no cameras available
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  getCameraImage: async (accountId, cameraId, timestamp, refresh = false) => {
+    try {
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
+        responseType: 'arraybuffer'  // Get raw binary data
+      });
+      
+      // Convert array buffer to base64
+      const base64 = btoa(
+        new Uint8Array(response.data)
+          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+
+      return base64;  // Return base64 string directly
     } catch (error) {
       throw error.response?.data || error;
     }
