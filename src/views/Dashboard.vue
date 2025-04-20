@@ -286,8 +286,8 @@
               <p class="text-sm text-gray-600">
                 <span class="font-medium">ID:</span> {{ selectedCamera.id }}
               </p>
-              <p v-if="useCustomTimestamp" class="text-sm text-gray-600">
-                <span class="font-medium">Image Time:</span> {{ formatDate(useCustomTimestamp) }}
+              <p class="text-sm text-gray-600">
+                <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
               </p>
             </div>
           </div>
@@ -397,7 +397,7 @@ const selectedCamera = ref(null);
 const cameraImageLoading = ref(false);
 const cameraImageError = ref(null);
 const cameraImageBase64 = ref(null);
-const useCustomTimestamp = ref(null);
+const imageTimestamp = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -556,9 +556,7 @@ const updateElapsedTime = () => {
 
 const fetchSensorDetails = async (accountId, sensorId) => {
   try {
-    console.log(`Fetching details for sensor ${sensorId}`);
     const details = await sensorService.getSensorDetails(accountId, sensorId);
-    console.log(`Got details for sensor ${sensorId}:`, details);
     sensorDetails.value[sensorId] = details;
   } catch (err) {
     console.error(`Failed to fetch details for sensor ${sensorId}:`, err);
@@ -596,15 +594,16 @@ const showCameraDetails = async (camera, timestamp = null) => {
   cameraImageLoading.value = true;
   cameraImageError.value = null;
   cameraImageBase64.value = null;
-  useCustomTimestamp.value = timestamp;
-
+  
   try {
     // Use provided timestamp or current time
-    const imageTimestamp = timestamp || Math.floor(Date.now() / 1000);
+    const currentTimestamp = timestamp || Math.floor(Date.now() / 1000);
+    imageTimestamp.value = currentTimestamp;
+    
     const base64Data = await eagleEyeService.getCameraImage(
       authStore.getAccountId,
       camera.id,
-      imageTimestamp
+      currentTimestamp
     );
     
     cameraImageBase64.value = base64Data;
@@ -619,6 +618,7 @@ const closeCameraModal = () => {
   selectedCamera.value = null;
   cameraImageError.value = null;
   cameraImageBase64.value = null;
+  imageTimestamp.value = null;
 };
 
 const testSelectedNotification = async () => {

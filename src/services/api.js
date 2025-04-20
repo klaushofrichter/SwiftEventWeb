@@ -74,7 +74,6 @@ export const authService = {
           'Authorization': `Bearer ${authStore.token}`
         }
       });
-      console.log("refreshToken response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -105,9 +104,7 @@ export const sensorService = {
 
   getSensorDetails: async (accountId, sensorId) => {
     try {
-      console.log("getSensorDetails", accountId, sensorId);
       const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/${sensorId}`);
-      console.log("getSensorDetails response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -136,9 +133,7 @@ export const notificationService = {
 
   testNotification: async (accountId, notificationId) => {
     try {
-      console.log("testNotification", accountId, notificationId);
       const response = await api.post(`/api/client/v1/accounts/${accountId}/notifications/${notificationId}/test`);
-      console.log("testNotification response", response);
       return; // No response body needed as per API spec
     } catch (error) {
       console.error("testNotification error", error);
@@ -193,7 +188,6 @@ export const eagleEyeService = {
 
   getCameraImage: async (accountId, cameraId, timestamp, refresh = false) => {
     try {
-      console.log("getCameraImage", accountId, cameraId, timestamp, refresh);
       const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
         responseType: 'arraybuffer'  // Get raw binary data
       });
