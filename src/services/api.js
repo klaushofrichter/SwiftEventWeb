@@ -143,5 +143,14 @@ export const eagleEyeService = {
     } catch (error) {
       throw error.response?.data || error;
     }
+  },
+
+  testCreds: async (accountId) => {
+    try {
+      const response = await api.post(`/api/client/v1/accounts/${accountId}/eagleeye/creds/test`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
   }
 }; 

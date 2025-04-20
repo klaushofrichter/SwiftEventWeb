@@ -196,7 +196,14 @@
               </span>
             </p>
             <p v-if="eagleEyeCreds?.username" class="text-sm text-gray-500 mt-1">
-              <span class="font-medium">Username:</span> {{ eagleEyeCreds.username }}
+              <span class="font-medium">Username: </span>
+              {{ eagleEyeCreds.username }}
+              <span 
+                class="ml-2 px-2 py-0.5 text-xs rounded-full"
+                :class="isCredentialValid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
+              >
+                {{ isCredentialValid ? 'valid' : 'unverified' }}
+              </span>
             </p>
           </div>
         </div>
@@ -253,6 +260,12 @@ const sensors = ref([]);
 const eagleEyeLoading = ref(false);
 const eagleEyeError = ref(null);
 const eagleEyeCreds = ref(null);
+const eagleEyeTestResult = ref(null);
+const isCredentialValid = computed(() => {
+  if (!eagleEyeCreds.value || !eagleEyeTestResult.value) return false;
+  return eagleEyeTestResult.value.success && 
+         eagleEyeTestResult.value.username === eagleEyeCreds.value.username;
+});
 
 const getUnit = (unitId) => {
   const units = {
@@ -344,6 +357,12 @@ const fetchData = async () => {
     const accountId = authStore.getAccountId;
     const response = await eagleEyeService.creds(accountId);
     eagleEyeCreds.value = response;
+    
+    // Test the credentials if they exist
+    if (response.username) {
+      const testResponse = await eagleEyeService.testCreds(accountId);
+      eagleEyeTestResult.value = testResponse;
+    }
   } catch (err) {
     eagleEyeError.value = err.msg || 'Failed to fetch Eagle Eye credentials';
   } finally {
