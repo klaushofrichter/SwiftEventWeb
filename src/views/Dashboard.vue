@@ -296,66 +296,54 @@
             </svg>
           </button>
         </div>
-        <div class="space-y-4">
-          <div>
-            <h4 class="font-medium text-gray-900">Camera Details</h4>
-            <div class="mt-2 space-y-2">
+        <div>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
               <p class="text-sm text-gray-600">
                 <span class="font-medium">ID:</span> {{ selectedCamera.id }}
               </p>
-              <p class="text-sm text-gray-600">
-                <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
-              </p>
-              <div class="mt-2">
-                <a 
-                  :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                  title="View in Eagle Eye"
-                >
-                  View in the Eagle Eye Networks Application
-                </a>
-              </div>
+              <a 
+                :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                title="View in Eagle Eye"
+              >
+                View in the Eagle Eye Networks Application
+              </a>
             </div>
-          </div>
-
-          <!-- Camera Image Section -->
-          <div class="mt-4">
-            <h4 class="font-medium text-gray-900 mb-2">Live Image</h4>
-            <div class="bg-gray-100 rounded-lg p-4 flex items-center justify-center min-h-[300px]">
-              <div v-if="cameraImageLoading" class="flex flex-col items-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                <p class="mt-2 text-sm text-gray-500">Loading image...</p>
-              </div>
-              <div v-else-if="cameraImageError" class="text-center">
-                <p class="text-red-500">{{ cameraImageError }}</p>
-                <button
-                  @click="showCameraDetails(selectedCamera)"
-                  class="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
-                >
-                  Try Again
-                </button>
-              </div>
-              <img
-                v-else-if="cameraImageBase64"
-                :src="'data:image/png;base64,' + cameraImageBase64"
-                :alt="selectedCamera.name"
-                class="max-w-full max-h-[400px] object-contain"
-              />
-              <div v-else class="text-center text-gray-500">
-                No image available
-              </div>
-            </div>
+            <p class="text-sm text-gray-600">
+              <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
+            </p>
           </div>
         </div>
-        <div class="mt-6 flex justify-end">
-          <button
-            @click="closeCameraModal"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Close
-          </button>
+
+        <!-- Camera Image Section -->
+        <div class="mt-4">
+          <div class="bg-gray-100 rounded-lg p-4 flex items-center justify-center min-h-[300px]">
+            <div v-if="cameraImageLoading" class="flex flex-col items-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <p class="mt-2 text-sm text-gray-500">Loading image...</p>
+            </div>
+            <div v-else-if="cameraImageError" class="text-center">
+              <p class="text-red-500">{{ cameraImageError }}</p>
+              <button
+                @click="showCameraDetails(selectedCamera)"
+                class="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+              >
+                Try Again
+              </button>
+            </div>
+            <img
+              v-else-if="cameraImageBase64"
+              :src="'data:image/png;base64,' + cameraImageBase64"
+              :alt="selectedCamera.name"
+              class="max-w-full max-h-[400px] object-contain"
+            />
+            <div v-else class="text-center text-gray-500">
+              No image available
+            </div>
+          </div>
         </div>
       </div>
     </div>
