@@ -97,7 +97,17 @@ export const sensorService = {
   getSensors: async (accountId) => {
     try {
       const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/visible`);
-      console.log("getSensors response", response);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  getSensorDetails: async (accountId, sensorId) => {
+    try {
+      console.log("getSensorDetails", accountId, sensorId);
+      const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/${sensorId}`);
+      console.log("getSensorDetails response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;

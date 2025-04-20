@@ -96,6 +96,18 @@
               <span class="text-gray-500">Status:</span>
               <span class="text-gray-700">{{ sensor[7] === 1 ? 'Active' : 'Inactive' }}</span>
             </div>
+            <div v-if="sensorDetails[sensor[0]]?.eeCameraIds?.length" class="mt-2 pt-2 border-t border-gray-200">
+              <p class="text-sm text-gray-500">Associated Cameras:</p>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <span 
+                  v-for="cameraId in sensorDetails[sensor[0]].eeCameraIds" 
+                  :key="cameraId"
+                  class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                >
+                  {{ cameraId }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -336,7 +348,7 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue';
 import { useDataStore } from '../stores/data';
 import { useAuthStore } from '../stores/auth';
-import { eagleEyeService, notificationService } from '../services/api';
+import { eagleEyeService, notificationService, sensorService } from '../services/api';
 import packageJson from '../../package.json';
 
 const version = packageJson.version;
@@ -364,6 +376,7 @@ let timer = null;
 const devices = ref([]);
 const notifications = ref([]);
 const sensors = ref([]);
+const sensorDetails = ref({});
 
 const eagleEyeLoading = ref(false);
 const eagleEyeError = ref(null);
@@ -445,6 +458,13 @@ const fetchData = async () => {
   try {
     await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
+    
+    // Fetch details for each sensor
+    const fetchPromises = sensors.value.map(sensor => 
+      fetchSensorDetails(authStore.getAccountId, sensor[0])
+    );
+    await Promise.all(fetchPromises);
+    
     // Set lastUpdateTime when sensors are first loaded
     lastUpdateTime.value = Date.now();
     updateElapsedTime();
@@ -529,6 +549,17 @@ const updateElapsedTime = () => {
   }
 };
 
+const fetchSensorDetails = async (accountId, sensorId) => {
+  try {
+    console.log(`Fetching details for sensor ${sensorId}`);
+    const details = await sensorService.getSensorDetails(accountId, sensorId);
+    console.log(`Got details for sensor ${sensorId}:`, details);
+    sensorDetails.value[sensorId] = details;
+  } catch (err) {
+    console.error(`Failed to fetch details for sensor ${sensorId}:`, err);
+  }
+};
+
 const refreshSensors = async () => {
   sensorsError.value = null;
   sensorsLoading.value = true;
@@ -536,9 +567,15 @@ const refreshSensors = async () => {
   lastUpdateTime.value = null;
   try {
     // Fetch new data but keep current display
-    const newSensors = await dataStore.fetchSensors();
-    // Only update display after successful fetch
+    await dataStore.fetchSensors();
     sensors.value = dataStore.sensors;
+    
+    // Fetch details for each sensor
+    const fetchPromises = sensors.value.map(sensor => 
+      fetchSensorDetails(authStore.getAccountId, sensor[0])
+    );
+    await Promise.all(fetchPromises);
+    
     // Show the timer display again with new timestamp
     lastUpdateTime.value = Date.now();
     updateElapsedTime();
