@@ -152,5 +152,18 @@ export const eagleEyeService = {
     } catch (error) {
       throw error.response?.data || error;
     }
+  },
+
+  getCameras: async (accountId, refresh = false) => {
+    try {
+      console.log("getCameras", accountId, refresh);
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras`, {
+        params: { refresh }
+      });
+      console.log("getCameras response", response);
+      return response.data || null; // Return null if no cameras available
+    } catch (error) {
+      throw error.response?.data || error;
+    }
   }
 }; 

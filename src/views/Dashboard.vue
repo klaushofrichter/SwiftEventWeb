@@ -186,25 +186,42 @@
       <div v-else-if="eagleEyeError" class="text-red-500 text-center">
         {{ eagleEyeError }}
       </div>
-      <div v-else class="bg-gray-50 p-4 rounded-lg">
-        <div class="flex items-center">
-          <div class="flex-grow">
-            <p class="text-sm text-gray-500">
-              <span class="font-medium">Status: </span>
-              <span :class="eagleEyeCreds?.success ? 'text-green-600' : 'text-red-600'">
-                {{ eagleEyeCreds?.success ? 'Connected' : 'Not Connected' }}
-              </span>
-            </p>
-            <p v-if="eagleEyeCreds?.username" class="text-sm text-gray-500 mt-1">
-              <span class="font-medium">Username: </span>
-              {{ eagleEyeCreds.username }}
-              <span 
-                class="ml-2 px-2 py-0.5 text-xs rounded-full"
-                :class="isCredentialValid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
-              >
-                {{ isCredentialValid ? 'valid' : 'unverified' }}
-              </span>
-            </p>
+      <div v-else class="space-y-4">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="flex-grow">
+              <p class="text-sm text-gray-500">
+                <span class="font-medium">Status: </span>
+                <span :class="eagleEyeCreds?.success ? 'text-green-600' : 'text-red-600'">
+                  {{ eagleEyeCreds?.success ? 'Connected' : 'Not Connected' }}
+                </span>
+              </p>
+              <p v-if="eagleEyeCreds?.username" class="text-sm text-gray-500 mt-1">
+                <span class="font-medium">Username: </span>
+                {{ eagleEyeCreds.username }}
+                <span 
+                  class="ml-2 px-2 py-0.5 text-xs rounded-full"
+                  :class="isCredentialValid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'"
+                >
+                  {{ isCredentialValid ? 'valid' : 'unverified' }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cameras Section -->
+        <div v-if="isCredentialValid && eagleEyeCameras" class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-medium text-gray-900 mb-3">Cameras</h3>
+          <div v-if="eagleEyeCameras.length === 0" class="text-sm text-gray-500 text-center">
+            No cameras found
+          </div>
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div v-for="camera in eagleEyeCameras" :key="camera.id" 
+              class="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              <h4 class="font-medium text-gray-900">{{ camera.name }}</h4>
+              <p class="text-sm text-gray-500 mt-1">ID: {{ camera.id }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -261,6 +278,7 @@ const eagleEyeLoading = ref(false);
 const eagleEyeError = ref(null);
 const eagleEyeCreds = ref(null);
 const eagleEyeTestResult = ref(null);
+const eagleEyeCameras = ref(null);
 const isCredentialValid = computed(() => {
   if (!eagleEyeCreds.value || !eagleEyeTestResult.value) return false;
   return eagleEyeTestResult.value.success && 
@@ -362,6 +380,12 @@ const fetchData = async () => {
     if (response.username) {
       const testResponse = await eagleEyeService.testCreds(accountId);
       eagleEyeTestResult.value = testResponse;
+      
+      // Fetch cameras if credentials are valid
+      if (testResponse.success) {
+        await dataStore.fetchEagleEyeCameras();
+        eagleEyeCameras.value = dataStore.getEagleEyeCameras;
+      }
     }
   } catch (err) {
     eagleEyeError.value = err.msg || 'Failed to fetch Eagle Eye credentials';
