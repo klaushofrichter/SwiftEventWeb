@@ -97,6 +97,7 @@ export const sensorService = {
   getSensors: async (accountId) => {
     try {
       const response = await api.get(`/api/client/v2/accounts/${accountId}/sensors/visible`);
+      console.log("getSensors response", response);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -120,6 +121,21 @@ export const notificationService = {
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
+    }
+  },
+
+  testNotification: async (accountId, notificationId) => {
+    try {
+      console.log("testNotification", accountId, notificationId);
+      const response = await api.post(`/api/client/v1/accounts/${accountId}/notifications/${notificationId}/test`);
+      console.log("testNotification response", response);
+      return; // No response body needed as per API spec
+    } catch (error) {
+      console.error("testNotification error", error);
+      if (error.response) {
+        throw error.response.data;
+      }
+      throw error;
     }
   }
 };
@@ -169,11 +185,16 @@ export const eagleEyeService = {
     try {
       console.log("getCameraImage", accountId, cameraId, timestamp, refresh);
       const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
-        params: { refresh },
-        responseType: 'blob' // Important: Set response type to blob for binary image data
+        responseType: 'arraybuffer'  // Get raw binary data
       });
-      console.log("getCameraImage response", response);
-      return response.data; // Returns a Blob object containing the image data
+      
+      // Convert array buffer to base64
+      const base64 = btoa(
+        new Uint8Array(response.data)
+          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+
+      return base64;  // Return base64 string directly
     } catch (error) {
       throw error.response?.data || error;
     }

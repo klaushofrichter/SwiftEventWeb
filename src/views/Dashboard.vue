@@ -166,7 +166,21 @@
             </div>
           </div>
         </div>
-        <div class="mt-6 flex justify-end">
+        <div class="mt-6 flex justify-end space-x-3">
+          <button
+            @click="testSelectedNotification"
+            :disabled="notificationTestLoading"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          >
+            <span v-if="notificationTestLoading" class="inline-flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Testing...
+            </span>
+            <span v-else>Test Notification</span>
+          </button>
           <button
             @click="closeModal"
             class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -174,6 +188,9 @@
             Close
           </button>
         </div>
+        <p v-if="notificationTestError" class="mt-2 text-sm text-red-600">
+          {{ notificationTestError }}
+        </p>
       </div>
     </div>
 
@@ -277,8 +294,8 @@
                 </button>
               </div>
               <img
-                v-else-if="cameraImageUrl"
-                :src="cameraImageUrl"
+                v-else-if="cameraImageBase64"
+                :src="'data:image/png;base64,' + cameraImageBase64"
                 :alt="selectedCamera.name"
                 class="max-w-full max-h-[400px] object-contain"
               />
@@ -319,7 +336,7 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue';
 import { useDataStore } from '../stores/data';
 import { useAuthStore } from '../stores/auth';
-import { eagleEyeService } from '../services/api';
+import { eagleEyeService, notificationService } from '../services/api';
 import packageJson from '../../package.json';
 
 const version = packageJson.version;
@@ -338,6 +355,8 @@ const devicesError = ref(null);
 const sensorsError = ref(null);
 const notificationsError = ref(null);
 const selectedNotification = ref(null);
+const notificationTestLoading = ref(false);
+const notificationTestError = ref(null);
 const lastUpdateTime = ref(null);
 const elapsedTime = ref('');
 let timer = null;
@@ -360,7 +379,7 @@ const isCredentialValid = computed(() => {
 const selectedCamera = ref(null);
 const cameraImageLoading = ref(false);
 const cameraImageError = ref(null);
-const cameraImageUrl = ref(null);
+const cameraImageBase64 = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -534,19 +553,19 @@ const showCameraDetails = async (camera) => {
   selectedCamera.value = camera;
   cameraImageLoading.value = true;
   cameraImageError.value = null;
-  cameraImageUrl.value = null;
+  cameraImageBase64.value = null;
 
   try {
     // Get current UTC timestamp in seconds
     const timestamp = Math.floor(Date.now() / 1000);
-    const imageBlob = await eagleEyeService.getCameraImage(
+    const base64Data = await eagleEyeService.getCameraImage(
       authStore.getAccountId,
       camera.id,
       timestamp
     );
     
-    // Create object URL from the blob
-    cameraImageUrl.value = URL.createObjectURL(imageBlob);
+    // Store the base64 data directly
+    cameraImageBase64.value = base64Data;
   } catch (err) {
     cameraImageError.value = err.msg || 'Failed to fetch camera image';
   } finally {
@@ -557,10 +576,30 @@ const showCameraDetails = async (camera) => {
 const closeCameraModal = () => {
   selectedCamera.value = null;
   cameraImageError.value = null;
-  // Clean up the object URL to prevent memory leaks
-  if (cameraImageUrl.value) {
-    URL.revokeObjectURL(cameraImageUrl.value);
-    cameraImageUrl.value = null;
+  cameraImageBase64.value = null;
+};
+
+const testSelectedNotification = async () => {
+  if (!selectedNotification.value) return;
+  
+  notificationTestLoading.value = true;
+  notificationTestError.value = null;
+  
+  try {
+    // The notification ID is in the first element of the array for list view
+    // or in the id property for detail view
+    const notificationId = selectedNotification.value.id || selectedNotification.value[0];
+    
+    console.log("Testing notification", notificationId);
+    await notificationService.testNotification(
+      authStore.getAccountId,
+      notificationId
+    );
+  } catch (err) {
+    console.error("Test notification error", err);
+    notificationTestError.value = err.msg || 'Failed to test notification';
+  } finally {
+    notificationTestLoading.value = false;
   }
 };
 
