@@ -156,12 +156,22 @@ export const eagleEyeService = {
 
   getCameras: async (accountId, refresh = false) => {
     try {
-      console.log("getCameras", accountId, refresh);
       const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras`, {
         params: { refresh }
       });
-      console.log("getCameras response", response);
       return response.data || null; // Return null if no cameras available
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  getCameraImage: async (accountId, cameraId, timestamp, refresh = false) => {
+    try {
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
+        params: { refresh },
+        responseType: 'blob' // Important: Set response type to blob for binary image data
+      });
+      return response.data; // Returns a Blob object containing the image data
     } catch (error) {
       throw error.response?.data || error;
     }

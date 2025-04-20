@@ -218,11 +218,54 @@
           </div>
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div v-for="camera in eagleEyeCameras" :key="camera.id" 
-              class="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              @click="showCameraDetails(camera)"
+              class="bg-white p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
               <h4 class="font-medium text-gray-900">{{ camera.name }}</h4>
               <p class="text-sm text-gray-500 mt-1">ID: {{ camera.id }}</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Camera Details Modal -->
+    <div
+      v-if="selectedCamera"
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
+      @click="closeCameraModal"
+    >
+      <div
+        class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4"
+        @click.stop
+      >
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-xl font-bold text-gray-900">{{ selectedCamera.name }}</h3>
+          <button
+            @click="closeCameraModal"
+            class="text-gray-400 hover:text-gray-500"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-medium text-gray-900">Camera Details</h4>
+            <div class="mt-2 space-y-2">
+              <p class="text-sm text-gray-600">
+                <span class="font-medium">ID:</span> {{ selectedCamera.id }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button
+            @click="closeCameraModal"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -284,6 +327,8 @@ const isCredentialValid = computed(() => {
   return eagleEyeTestResult.value.success && 
          eagleEyeTestResult.value.username === eagleEyeCreds.value.username;
 });
+
+const selectedCamera = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -451,6 +496,14 @@ const refreshSensors = async () => {
   } finally {
     sensorsLoading.value = false;
   }
+};
+
+const showCameraDetails = (camera) => {
+  selectedCamera.value = camera;
+};
+
+const closeCameraModal = () => {
+  selectedCamera.value = null;
 };
 
 onMounted(() => {
