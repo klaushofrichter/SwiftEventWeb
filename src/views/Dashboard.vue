@@ -102,7 +102,7 @@
                 <span 
                   v-for="cameraId in sensorDetails[sensor[0]].eeCameraIds" 
                   :key="cameraId"
-                  @click="handleCameraClick(cameraId)"
+                  @click="handleCameraClick(cameraId, sensor[4])"
                   class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full cursor-pointer hover:bg-blue-200"
                 >
                   {{ cameraId }}
@@ -286,6 +286,9 @@
               <p class="text-sm text-gray-600">
                 <span class="font-medium">ID:</span> {{ selectedCamera.id }}
               </p>
+              <p v-if="useCustomTimestamp" class="text-sm text-gray-600">
+                <span class="font-medium">Image Time:</span> {{ formatDate(useCustomTimestamp) }}
+              </p>
             </div>
           </div>
 
@@ -394,6 +397,7 @@ const selectedCamera = ref(null);
 const cameraImageLoading = ref(false);
 const cameraImageError = ref(null);
 const cameraImageBase64 = ref(null);
+const useCustomTimestamp = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -587,22 +591,22 @@ const refreshSensors = async () => {
   }
 };
 
-const showCameraDetails = async (camera) => {
+const showCameraDetails = async (camera, timestamp = null) => {
   selectedCamera.value = camera;
   cameraImageLoading.value = true;
   cameraImageError.value = null;
   cameraImageBase64.value = null;
+  useCustomTimestamp.value = timestamp;
 
   try {
-    // Get current UTC timestamp in seconds
-    const timestamp = Math.floor(Date.now() / 1000);
+    // Use provided timestamp or current time
+    const imageTimestamp = timestamp || Math.floor(Date.now() / 1000);
     const base64Data = await eagleEyeService.getCameraImage(
       authStore.getAccountId,
       camera.id,
-      timestamp
+      imageTimestamp
     );
     
-    // Store the base64 data directly
     cameraImageBase64.value = base64Data;
   } catch (err) {
     cameraImageError.value = err.msg || 'Failed to fetch camera image';
@@ -645,10 +649,10 @@ const findCameraById = (cameraId) => {
   return eagleEyeCameras.value?.find(camera => camera.id === cameraId);
 };
 
-const handleCameraClick = (cameraId) => {
+const handleCameraClick = (cameraId, sensorTimestamp) => {
   const camera = findCameraById(cameraId);
   if (camera) {
-    showCameraDetails(camera);
+    showCameraDetails(camera, sensorTimestamp);
   } else {
     console.warn(`Camera ${cameraId} not found in available cameras`);
   }
