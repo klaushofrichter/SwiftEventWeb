@@ -296,25 +296,25 @@
             </svg>
           </button>
         </div>
-        <div>
+        <div class="flex justify-between items-start">
           <div class="space-y-2">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-gray-600">
-                <span class="font-medium">ID:</span> {{ selectedCamera.id }}
-              </p>
-              <a 
-                :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                title="View in Eagle Eye"
-              >
-                View in the Eagle Eye Networks Application
-              </a>
-            </div>
+            <p class="text-sm text-gray-600">
+              <span class="font-medium">ID:</span> {{ selectedCamera.id }}
+            </p>
             <p class="text-sm text-gray-600">
               <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
             </p>
+          </div>
+          <div>
+            <a 
+              :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              title="View in Eagle Eye"
+            >
+              View in the Eagle Eye Networks Application
+            </a>
           </div>
         </div>
 
