@@ -121,7 +121,7 @@
                       : 'bg-gray-100 text-gray-500 cursor-not-allowed'
                   ]"
                 >
-                  {{ cameraId }}
+                  {{ eagleEyeCameras ? getCameraLabel(cameraId) : cameraId }}
                   <span v-if="!eagleEyeCameras" class="text-xs ml-1">(loading...)</span>
                 </span>
               </div>
@@ -692,6 +692,11 @@ const testSelectedNotification = async () => {
 
 const findCameraById = (cameraId) => {
   return eagleEyeCameras.value?.find(camera => camera.id === cameraId);
+};
+
+const getCameraLabel = (cameraId) => {
+  const camera = findCameraById(cameraId);
+  return camera?.name || cameraId;
 };
 
 const handleCameraClick = (cameraId, sensorTimestamp) => {
