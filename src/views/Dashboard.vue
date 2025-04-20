@@ -102,10 +102,16 @@
                 <span 
                   v-for="cameraId in sensorDetails[sensor[0]].eeCameraIds" 
                   :key="cameraId"
-                  @click="handleCameraClick(cameraId, sensor[4])"
-                  class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full cursor-pointer hover:bg-blue-200"
+                  @click="eagleEyeCameras ? handleCameraClick(cameraId, sensor[4]) : null"
+                  class="px-2 py-1 text-xs rounded-full cursor-pointer"
+                  :class="[
+                    eagleEyeCameras 
+                      ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' 
+                      : 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                  ]"
                 >
                   {{ cameraId }}
+                  <span v-if="!eagleEyeCameras" class="text-xs ml-1">(loading...)</span>
                 </span>
               </div>
             </div>
