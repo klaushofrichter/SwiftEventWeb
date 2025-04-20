@@ -1,9 +1,11 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for as a technology demonstration. The application runs on desktop browsers, tablet and mobile.
-The application was build with [Cursor](https://Cursor.com) (Claude-3.7-Sonnet) on MacOS 15.4 and Windows 11. The application is using
+A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for as a technology 
+demonstration. The application runs on desktop browsers, tablet and mobile. The application was build with 
+[Cursor](https://Cursor.com) (Claude-3.7-Sonnet) on MacOS 15.4 and Windows 11. The application is using
 the [SwiftSensors public API](https://my.swiftsensors.net/api-docs), but has other than that 
-no relation to SwiftSensors. Specifically, this application is not supported or endorsed by SwiftSensors. 
+no relation to SwiftSensors. Specifically, this application is not supported or endorsed by SwiftSensors. A version 
+of this application is deployed via Github Pages: [https://klaushofrichter.github.io/SwiftEventWeb](https://klaushofrichter.github.io/SwiftEventWeb)
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages) 
 ![CodeQL Check](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/codeql.yml/badge.svg?label=CodeQL) 
