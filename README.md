@@ -143,6 +143,7 @@ This allows Github Pages to operate.
   standard user has 2FA enabled and you are unwilling to disable this setting. The sub-user 
   might have less access rights to compensate for the reduction of security features. 
 - Credentials are stored locally. Please use `logout` to remove the credentials. 
+- Camera images are not correctly retrieved from Swiftsensors. Use the EEN application links instead. 
 
 ## Development and Deployment Prerequisites
 
@@ -211,8 +212,8 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 
 ## Testing
 
-There are two types of tests: a local API test using `./test_api.sh` and a set of [Playwright[(https://playwright.dev/)] tests of the Application, locally or in production. To run these 
-locally you need to provide valid credentials in the `.env ` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD` or as repository secrets.
+There are two types of tests: a local API test using `./test_api.sh` and a set of [Playwright](https://playwright.dev/) tests of the Application, locally or in production. To run these 
+locally you need to provide valid credentials in the `.env` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD` or as repository secrets.
 
 Local API test: `test_api.sh`: this is a simple CURL script that tests the credentials by
 retrieving an access token from the Swiftsensors API. Just call the script
