@@ -263,9 +263,9 @@ Playwright errors in `gh-pages` found after deployment are
 communicated through Slack messaging and Github issues - although this is rare as Playwright was 
 running before the merge already. A [release package](https://github.com/klaushofrichter/SwiftEventWeb/releases) with all sources is created and published for every release that goes into the `gh-pages` branch. 
 
-It is not expected to attract contributions from other developers for this project, and three 
-may be limited capacity to integrate contributions. So it is 
-recommended to fork this respository if there is interest in any aspect for this project. 
+It is not expected to attract contributions from other developers for this project, and there 
+is limited capacity to integrate contributions. So it is 
+recommended to fork this repository if there is interest in any aspect of this project. 
 Contributions in form of a feature branch may be considered for integration with this repository.  
 
 ## GitHub Actions Workflows
