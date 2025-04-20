@@ -322,7 +322,7 @@
               <span class="font-medium">ID:</span> {{ selectedCamera.id }}
             </p>
             <p class="text-sm text-gray-600">
-              <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
+              <span class="font-medium">Time:</span> {{ formatDate(imageTimestamp) }}
             </p>
           </div>
           <div>
