@@ -179,7 +179,16 @@
 
     <!-- Version Display -->
     <div class="mt-8 text-center">
-      <p class="text-xs text-gray-400">Version {{ version }} ({{ lastCommit }})</p>
+      <p class="text-xs text-gray-400">
+        Version {{ version }} ({{ lastCommit }})
+        <span class="mx-1">·</span>
+        <a href="https://github.com/klaushofrichter/SwiftEventWeb/blob/develop/README.md" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="text-indigo-600 hover:text-indigo-800">
+          README
+        </a>
+      </p>
     </div>
   </div>
 </template>
