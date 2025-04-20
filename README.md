@@ -138,12 +138,12 @@ This allows Github Pages to operate.
 
 - There is no realtime event handling or timeseries display. 
 - The Application is not actively maintained. 
-- The user account that is used for login can not have 2FA enabled. Therefore, in the 
-  my.Swiftsensors.net console, it is recommended to create a sub-user without 2FA if the 
+- The user account that is used for login can not have 2FA enabled. Therefore, it is 
+  recommended to create a sub-user without 2FA in the 
+  [my.Swiftsensors.net](https://my.swiftsensors.net/) console, if the 
   standard user has 2FA enabled and you are unwilling to disable this setting. The sub-user 
   might have less access rights to compensate for the reduction of security features. 
 - Credentials are stored locally. Please use `logout` to remove the credentials. 
-- Camera images are not correctly retrieved from Swiftsensors. Use the EEN application links instead. 
 
 ## Development and Deployment Prerequisites
 
