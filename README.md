@@ -1,6 +1,6 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for desktop, table and mobile usage.
+A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for as a technology demonstration. The application runs on desktop browsers, tablet and mobile.
 The application was build with [Cursor](https://Cursor.com) (Claude-3.7-Sonnet) on MacOS 15.4 and Windows 11. The application is using
 the [SwiftSensors public API](https://my.swiftsensors.net/api-docs), but has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported or endorsed by SwiftSensors. 
@@ -246,6 +246,18 @@ VITE_SWIFT_SENSORS_PASSWORD=your-password
 ```
 
 You can run this also as part of the github actions workflow `.github/workflows/test-develop.yml` or `.github/workflows/test-gh-pages.yml` against the production deployment on Github Pages. 
+
+
+## Branch Strategy and Contributions
+
+This Github repository is setup for a single developer or a really small team. There is an unprotected `develop` branch (default) that serves as entry point for all changes, even when it's work in progress. When working with AI, it is sometimes advised to commit frequently. Note that the package.json patch version ID is incremented automatically with every commit. There is a protected `prod` branch which is fed by Pull Requests from `develop`. The PR goes through Github CoPilot code review, CodeQL scanning and all Playwright tests before merge. After the merge the application build and deployed into the `gh-pages` branch, which is then automatically deployed to the public hosting. Once deployed, all Playwright tests are executed again against the publicly hosted site. Errors are 
+communicated through Slack messaging and Github issues - although this is rare as Playwright was 
+running before the merge already. A [release package](https://github.com/klaushofrichter/SwiftEventWeb/releases) with all sources is created and published for every release that goes into the `gh-pages` branch.  
+
+It is not expected to attract contributions from other developers for this project, and three 
+may be limited capacity to integrate contributions. So it is 
+recommended to fork this respository if there is interest in any aspect for this project. 
+Contributions in form of a feature branch may be considered for integration with this repository.  
 
 ## GitHub Actions Workflows
 

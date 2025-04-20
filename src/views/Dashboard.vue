@@ -568,10 +568,19 @@ const fetchData = async () => {
   }
 };
 
+const disableBodyScroll = () => {
+  document.body.style.overflow = 'hidden';
+};
+
+const enableBodyScroll = () => {
+  document.body.style.overflow = 'auto';
+};
+
 const showNotificationDetails = async (notificationId) => {
   try {
     await dataStore.fetchNotificationDetails(notificationId);
     selectedNotification.value = dataStore.selectedNotification;
+    disableBodyScroll();
   } catch (err) {
     notificationsError.value = err.msg || 'Failed to fetch notification details';
   }
@@ -580,6 +589,7 @@ const showNotificationDetails = async (notificationId) => {
 const closeModal = () => {
   selectedNotification.value = null;
   dataStore.clearSelectedNotification();
+  enableBodyScroll();
 };
 
 const updateElapsedTime = () => {
@@ -647,7 +657,9 @@ const showCameraDetails = async (camera, timestamp = null) => {
   cameraImageLoading.value = true;
   cameraImageError.value = null;
   cameraImageBase64.value = null;
-  
+  imageTimestamp.value = timestamp;
+  disableBodyScroll();
+
   try {
     // Use provided timestamp or current time
     const currentTimestamp = timestamp || Math.floor(Date.now() / 1000);
@@ -656,7 +668,7 @@ const showCameraDetails = async (camera, timestamp = null) => {
     const base64Data = await eagleEyeService.getCameraImage(
       authStore.getAccountId,
       camera.id,
-      currentTimestamp * 1000 // Convert to millisecondsß
+      currentTimestamp
     );
     
     cameraImageBase64.value = base64Data;
@@ -672,6 +684,7 @@ const closeCameraModal = () => {
   cameraImageError.value = null;
   cameraImageBase64.value = null;
   imageTimestamp.value = null;
+  enableBodyScroll();
 };
 
 const testSelectedNotification = async () => {
@@ -716,10 +729,23 @@ const handleCameraClick = (cameraId, sensorTimestamp) => {
   }
 };
 
+const handleEscKey = (event) => {
+  if (event.key === 'Escape') {
+    if (selectedNotification.value) {
+      closeModal();
+    }
+    if (selectedCamera.value) {
+      closeCameraModal();
+    }
+  }
+};
+
 onMounted(() => {
   fetchData();
   // Start the timer to update elapsed time every second
   timer = setInterval(updateElapsedTime, 1000);
+  // Add ESC key listener
+  window.addEventListener('keydown', handleEscKey);
 });
 
 onUnmounted(() => {
@@ -728,5 +754,9 @@ onUnmounted(() => {
     clearInterval(timer);
     timer = null;
   }
+  // Remove ESC key listener
+  window.removeEventListener('keydown', handleEscKey);
+  // Ensure body scroll is enabled when component is unmounted
+  enableBodyScroll();
 });
 </script> 
