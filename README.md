@@ -143,6 +143,7 @@ This allows Github Pages to operate.
   standard user has 2FA enabled and you are unwilling to disable this setting. The sub-user 
   might have less access rights to compensate for the reduction of security features. 
 - Credentials are stored locally. Please use `logout` to remove the credentials. 
+- Camera images are not correctly retrieved from Swiftsensors. Use the EEN application links instead. 
 
 ## Development and Deployment Prerequisites
 
