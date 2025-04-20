@@ -250,9 +250,16 @@ You can run this also as part of the github actions workflow `.github/workflows/
 
 ## Branch Strategy and Contributions
 
-This Github repository is setup for a single developer or a really small team. There is an unprotected `develop` branch (default) that serves as entry point for all changes, even when it's work in progress. When working with AI, it is sometimes advised to commit frequently. Note that the package.json patch version ID is incremented automatically with every commit. There is a protected `prod` branch which is fed by Pull Requests from `develop`. The PR goes through Github CoPilot code review, CodeQL scanning and all Playwright tests before merge. After the merge the application build and deployed into the `gh-pages` branch, which is then automatically deployed to the public hosting. Once deployed, all Playwright tests are executed again against the publicly hosted site. Errors are 
+This Github repository is setup for a single developer or a really small team. There is an unprotected `develop` branch (default) that serves as entry point for all changes, even when it's work in progress. When working with AI, it is sometimes advised to commit frequently, so the
+`develop` branch may be incomplete or unstable. Note that the package.json version number (patch) 
+is incremented automatically with every commit. The minor version number is manually incremented
+when a relevant feature is added or some other milestone is reached.
+
+There is a protected `prod` branch which is fed by Pull Requests from `develop`. The PR goes through Github CoPilot code review, CodeQL scanning and all Playwright tests before merge. After the merge the application build and deployed into the `gh-pages` branch, which is then automatically deployed to the public hosting. Once deployed, all Playwright tests are executed again against the publicly hosted site. 
+
+Playwright errors in `gh-pages` found after deployment are 
 communicated through Slack messaging and Github issues - although this is rare as Playwright was 
-running before the merge already. A [release package](https://github.com/klaushofrichter/SwiftEventWeb/releases) with all sources is created and published for every release that goes into the `gh-pages` branch.  
+running before the merge already. A [release package](https://github.com/klaushofrichter/SwiftEventWeb/releases) with all sources is created and published for every release that goes into the `gh-pages` branch. 
 
 It is not expected to attract contributions from other developers for this project, and three 
 may be limited capacity to integrate contributions. So it is 
