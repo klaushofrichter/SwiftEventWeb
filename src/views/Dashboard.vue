@@ -97,7 +97,18 @@
               <span class="text-gray-700">{{ sensor[7] === 1 ? 'Active' : 'Inactive' }}</span>
             </div>
             <div v-if="sensorDetails[sensor[0]]?.eeCameraIds?.length" class="mt-2 pt-2 border-t border-gray-200">
-              <p class="text-sm text-gray-500">Associated Cameras:</p>
+              <div class="flex items-center justify-between">
+                <p class="text-sm text-gray-500">Associated Cameras:</p>
+                <a 
+                  :href="getEagleEyeHistoryUrl(sensorDetails[sensor[0]].eeCameraIds, sensor[4])"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                  title="View in Eagle Eye"
+                >
+                  View History
+                </a>
+              </div>
               <div class="mt-1 flex flex-wrap gap-2">
                 <span 
                   v-for="cameraId in sensorDetails[sensor[0]].eeCameraIds" 
@@ -429,6 +440,23 @@ const formatSensorValue = (value) => {
     return value === 1 ? 'Open' : 'Closed';
   }
   return value;
+};
+
+const formatDateForEagleEye = (timestamp) => {
+  if (!timestamp) return '';
+  const date = new Date(timestamp * 1000);
+  // Convert to UTC string and format it
+  const utcString = date.toISOString()
+    .replace('T', ' ')     // Replace T with space
+    .slice(0, -1)         // Remove the Z at the end
+    + ' UTC';             // Add UTC identifier
+  return utcString;
+};
+
+const getEagleEyeHistoryUrl = (cameraIds, timestamp) => {
+  const formattedTime = formatDateForEagleEye(timestamp);
+  const ids = cameraIds.join(',');
+  return `https://webapp.eagleeyenetworks.com/#/history?ids=${ids}&time=${encodeURIComponent(formattedTime)}`;
 };
 
 const fetchData = async () => {
