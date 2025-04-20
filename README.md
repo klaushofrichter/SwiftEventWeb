@@ -211,7 +211,7 @@ The application integrates with the [SwiftSensors API](https://my.swiftsensors.n
 
 ## Testing
 
-There are two types of tests: a local API test using `./test_api.sh` and a set of [Playwright](https://playwright.dev/)] tests of the Application, locally or in production. To run these 
+There are two types of tests: a local API test using `./test_api.sh` and a set of [Playwright](https://playwright.dev/) tests of the Application, locally or in production. To run these 
 locally you need to provide valid credentials in the `.env ` file for `VITE_SWIFT_SENSORS_USER` and `VITE_SWIFT_SENSORS_PASSWORD` or as repository secrets.
 
 Local API test: `test_api.sh`: this is a simple CURL script that tests the credentials by
