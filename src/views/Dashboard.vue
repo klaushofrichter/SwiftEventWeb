@@ -102,7 +102,8 @@
                 <span 
                   v-for="cameraId in sensorDetails[sensor[0]].eeCameraIds" 
                   :key="cameraId"
-                  class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                  @click="handleCameraClick(cameraId)"
+                  class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full cursor-pointer hover:bg-blue-200"
                 >
                   {{ cameraId }}
                 </span>
@@ -637,6 +638,19 @@ const testSelectedNotification = async () => {
     notificationTestError.value = err.msg || 'Failed to test notification';
   } finally {
     notificationTestLoading.value = false;
+  }
+};
+
+const findCameraById = (cameraId) => {
+  return eagleEyeCameras.value?.find(camera => camera.id === cameraId);
+};
+
+const handleCameraClick = (cameraId) => {
+  const camera = findCameraById(cameraId);
+  if (camera) {
+    showCameraDetails(camera);
+  } else {
+    console.warn(`Camera ${cameraId} not found in available cameras`);
   }
 };
 
