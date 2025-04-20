@@ -175,7 +175,17 @@
         class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4"
         @click.stop
       >
-        <h3 class="text-xl font-bold text-gray-900 mb-4">{{ selectedNotification.name }}</h3>
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-xl font-bold text-gray-900">{{ selectedNotification.name }}</h3>
+          <button
+            @click="closeModal"
+            class="text-gray-400 hover:text-gray-500"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
         <div class="space-y-4">
           <div>
             <h4 class="font-medium text-gray-900">Description</h4>
@@ -208,15 +218,9 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Testing...
+              Sending Test Alert...
             </span>
-            <span v-else>Send Test Notification</span>
-          </button>
-          <button
-            @click="closeModal"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Close
+            <span v-else>Send Test Alert</span>
           </button>
         </div>
         <p v-if="notificationTestError" class="mt-2 text-sm text-red-600">
@@ -271,6 +275,17 @@
               <h4 class="font-medium text-gray-900">{{ camera.name }}</h4>
               <p class="text-sm text-gray-500 mt-1">ID: {{ camera.id }}</p>
             </div>
+          </div>
+          <div class="mt-4 flex justify-end">
+            <a 
+              :href="getEagleEyeHistoryUrl(eagleEyeCameras.slice(0, 4).map(cam => cam.id), Math.floor(Date.now() / 1000))"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              title="Use the Eagle Eye Application for viewing the cameras"
+            >
+              {{ eagleEyeCameras.length <= 4 ? 'View all cameras with EEN' : 'View the first four cameras with EEN' }}
+            </a>
           </div>
         </div>
       </div>
@@ -666,7 +681,7 @@ const testSelectedNotification = async () => {
     // or in the id property for detail view
     const notificationId = selectedNotification.value.id || selectedNotification.value[0];
     
-    console.log("Testing notification", notificationId);
+    //console.log("Testing notification", notificationId);
     await notificationService.testNotification(
       authStore.getAccountId,
       notificationId

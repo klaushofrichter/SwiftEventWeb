@@ -37,12 +37,18 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
     - Dew Point sensors (°C of F)
   - Status indicators and alert states
   - Update intervals and activity status
+  - On-Demand update of the metrics
+  - Ability to navigate to view associated cameras in the Eagle Eye Networks Application
 
 - **Notification Viewing**
   - Listing of all configured notifications
   - Enable/Disable status indicators
   - Detailed notification information in modal view
-  - Measurement Refresh for real-time updates
+  - Ability to send test alerts on the modal view
+
+- **Eagle Eye Camera Information**
+  - List of all cameras associated to the account
+  - Ability to view the Camera in the Eagle Eye Networks Application
 
 - **CORS**
   - CORS handling via proxy ([Vite](https://vite.dev/) or [Cloudflare](https://www.cloudflare.com/))
