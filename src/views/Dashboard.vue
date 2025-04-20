@@ -106,7 +106,7 @@
                   class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
                   title="View in Eagle Eye"
                 >
-                  View History
+                  View in the Eagle Eye Networks Application
                 </a>
               </div>
               <div class="mt-1 flex flex-wrap gap-2">
@@ -306,6 +306,17 @@
               <p class="text-sm text-gray-600">
                 <span class="font-medium">Image Time:</span> {{ formatDate(imageTimestamp) }}
               </p>
+              <div class="mt-2">
+                <a 
+                  :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                  title="View in Eagle Eye"
+                >
+                  View in the Eagle Eye Networks Application
+                </a>
+              </div>
             </div>
           </div>
 
