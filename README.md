@@ -1,8 +1,8 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for viewing a SwiftSensors account and its sensors. 
-This application was build using [Cursor](https://Cursor.com) on MacOS 15.4 and Windows 11. The application is using
-the [SwiftSensors public API](https://my.swiftsensors.net/api-docs) but has other than that 
+A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for desktop, table and mobile usage.
+The application was build with [Cursor](https://Cursor.com) (Claude-3.7-Sonnet) on MacOS 15.4 and Windows 11. The application is using
+the [SwiftSensors public API](https://my.swiftsensors.net/api-docs), but has other than that 
 no relation to SwiftSensors. Specifically, this application is not supported or endorsed by SwiftSensors. 
 
 ![GH Pages Deployment](https://github.com/klaushofrichter/SwiftEventWeb/actions/workflows/deploy.yml/badge.svg?event=push&label=GH%20Pages) 
@@ -15,13 +15,12 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 ## Application Features
 
 - **Login with email, password and optional API Key**
-  - Overwriting of the default API Key at login time
+  - Overwriting of the default API Key at login time 
   - Local storage of credentials until explict logout
   - Automatic access token refresh
 
 - **Account Information Viewing**
-  - View account details
-  - Display account timezone and creation time
+  - View account details, including account timezone and account creation time
 
 - **Device Viewing**
   - View all devices associated with the account
@@ -31,31 +30,34 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 - **Metric Viewing**
   - Display of sensor data
   - Support for multiple metric types, including:
-    - Temperature sensors (°C of F)
+    - Temperature sensors
     - Humidity sensors (%)
     - Door sensors (Open/Closed)
-    - Dew Point sensors (°C of F)
+    - Dew Point sensors 
   - Status indicators and alert states
   - Update intervals and activity status
   - On-Demand update of the metrics
-  - Ability to navigate to view associated cameras in the Eagle Eye Networks Application
+  - Ability to navigate to view associated cameras in the [Eagle Eye Networks Application](https://webapp.eagleeyenetworks.com), or view a single camera capture within the application
 
 - **Notification Viewing**
   - Listing of all configured notifications
   - Enable/Disable status indicators
   - Detailed notification information in modal view
-  - Ability to send test alerts on the modal view
+  - Ability to send test alerts for a configured notification
 
 - **Eagle Eye Camera Information**
-  - List of all cameras associated to the account
-  - Ability to view the Camera in the Eagle Eye Networks Application
+  - List of all cameras associated to the account and view camera images
+  - Ability to view the cameras in the [Eagle Eye Networks Application](https://webapp.eagleeyenetworks.com/)
 
 - **CORS**
   - CORS handling via proxy ([Vite](https://vite.dev/) or [Cloudflare](https://www.cloudflare.com/))
 
 ## Screenshots
-<img src="/public/swiftsensorsweb.png" alt="SwiftSensors Web Dashboard" width="50%" />
-<img src="/public/swiftsensorsmobile.png" alt="SwiftSensors Mobile Dashboard" width="25%" /><img src="/public/swiftsensorsmobile2.png" alt="SwiftSensors Mobile Dashboard" width="25%" />
+<img src="/public/ipad0.png" alt="iPad screenshot - login" width="50%" />
+<img src="/public/ipad1.png" alt="iPad screenshot - dashboard upper half" width="50%" />
+<img src="/public/ipad2.png" alt="iPad screenshot - dashboard lower half" width="50%" />
+<img src="/public/ipad3.png" alt="iPad screenshot - camera detail" width="50%" />
+<img src="/public/ipad4.png" alt="iPad screenshot - notification detail" width="50%" />
 
 ## Technology Stack
 
@@ -64,7 +66,7 @@ no relation to SwiftSensors. Specifically, this application is not supported or 
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Axios](https://axios-http.com/) for API communication
 
-## Login Procedure
+## Login
 
 The Swiftsensors API requires an API Key for all calls in the header of the API call. 
 The API Key related to the Account, and any user/password is bound to that API Key. 
