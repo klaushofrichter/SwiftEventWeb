@@ -167,10 +167,12 @@ export const eagleEyeService = {
 
   getCameraImage: async (accountId, cameraId, timestamp, refresh = false) => {
     try {
+      console.log("getCameraImage", accountId, cameraId, timestamp, refresh);
       const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
         params: { refresh },
         responseType: 'blob' // Important: Set response type to blob for binary image data
       });
+      console.log("getCameraImage response", response);
       return response.data; // Returns a Blob object containing the image data
     } catch (error) {
       throw error.response?.data || error;

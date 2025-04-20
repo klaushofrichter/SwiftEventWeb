@@ -235,7 +235,7 @@
       @click="closeCameraModal"
     >
       <div
-        class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4"
+        class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4"
         @click.stop
       >
         <div class="flex justify-between items-start mb-4">
@@ -256,6 +256,35 @@
               <p class="text-sm text-gray-600">
                 <span class="font-medium">ID:</span> {{ selectedCamera.id }}
               </p>
+            </div>
+          </div>
+
+          <!-- Camera Image Section -->
+          <div class="mt-4">
+            <h4 class="font-medium text-gray-900 mb-2">Live Image</h4>
+            <div class="bg-gray-100 rounded-lg p-4 flex items-center justify-center min-h-[300px]">
+              <div v-if="cameraImageLoading" class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                <p class="mt-2 text-sm text-gray-500">Loading image...</p>
+              </div>
+              <div v-else-if="cameraImageError" class="text-center">
+                <p class="text-red-500">{{ cameraImageError }}</p>
+                <button
+                  @click="showCameraDetails(selectedCamera)"
+                  class="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                >
+                  Try Again
+                </button>
+              </div>
+              <img
+                v-else-if="cameraImageUrl"
+                :src="cameraImageUrl"
+                :alt="selectedCamera.name"
+                class="max-w-full max-h-[400px] object-contain"
+              />
+              <div v-else class="text-center text-gray-500">
+                No image available
+              </div>
             </div>
           </div>
         </div>
@@ -329,6 +358,9 @@ const isCredentialValid = computed(() => {
 });
 
 const selectedCamera = ref(null);
+const cameraImageLoading = ref(false);
+const cameraImageError = ref(null);
+const cameraImageUrl = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -498,12 +530,38 @@ const refreshSensors = async () => {
   }
 };
 
-const showCameraDetails = (camera) => {
+const showCameraDetails = async (camera) => {
   selectedCamera.value = camera;
+  cameraImageLoading.value = true;
+  cameraImageError.value = null;
+  cameraImageUrl.value = null;
+
+  try {
+    // Get current UTC timestamp in seconds
+    const timestamp = Math.floor(Date.now() / 1000);
+    const imageBlob = await eagleEyeService.getCameraImage(
+      authStore.getAccountId,
+      camera.id,
+      timestamp
+    );
+    
+    // Create object URL from the blob
+    cameraImageUrl.value = URL.createObjectURL(imageBlob);
+  } catch (err) {
+    cameraImageError.value = err.msg || 'Failed to fetch camera image';
+  } finally {
+    cameraImageLoading.value = false;
+  }
 };
 
 const closeCameraModal = () => {
   selectedCamera.value = null;
+  cameraImageError.value = null;
+  // Clean up the object URL to prevent memory leaks
+  if (cameraImageUrl.value) {
+    URL.revokeObjectURL(cameraImageUrl.value);
+    cameraImageUrl.value = null;
+  }
 };
 
 onMounted(() => {
