@@ -226,4 +226,58 @@ test('verify README link is valid and accessible', async ({ page, request }) => 
   const dashboardResponse = await request.get(dashboardHref);
   expect(dashboardResponse.ok()).toBeTruthy();
   expect(dashboardResponse.status()).toBe(200);
+});
+
+test('verify Eagle Eye section on dashboard', async ({ page }) => {
+  // Get credentials from environment variables
+  const username = process.env.VITE_SWIFT_SENSORS_USER;
+  const password = process.env.VITE_SWIFT_SENSORS_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error('Missing required environment variables: VITE_SWIFT_SENSORS_USER and VITE_SWIFT_SENSORS_PASSWORD');
+  }
+
+  // Navigate to login page and login
+  await page.goto(process.env.PLAYWRIGHT_TEST_BASE_URL || '/');
+  await page.locator('input[name="email"]').fill(username);
+  await page.locator('input[name="password"]').fill(password);
+  await page.locator('button[type="submit"]').click();
+
+  // Wait for navigation to dashboard
+  await page.waitForURL('**/dashboard', { timeout: 60000 });
+
+  // Verify Eagle Eye section exists
+  const eagleEyeSection = page.locator('h2:has-text("Eagle Eye")');
+  await expect(eagleEyeSection).toBeVisible();
+
+  // Wait for Eagle Eye data to load (wait for loading spinner to disappear)
+  await page.waitForSelector('.animate-spin', { state: 'detached', timeout: 10000 });
+
+  // Find the Eagle Eye section container and its content area
+  const eagleEyeContainer = page.locator('div.bg-white.shadow.rounded-lg.p-6').filter({ hasText: 'Eagle Eye' });
+  const contentArea = eagleEyeContainer.locator('div.bg-gray-50.p-4.rounded-lg');
+
+  // Verify Status field exists and has a value
+  const statusLabel = contentArea.locator('span.font-medium:has-text("Status:")').first();
+  await expect(statusLabel).toBeVisible();
+  
+  // Check for either Connected or Not Connected status
+  const statusValue = contentArea.locator('span', { hasText: /(Connected|Not Connected)/ });
+  await expect(statusValue).toBeVisible();
+
+  // If connected, verify username field exists and has a value
+  const isConnected = await contentArea.getByText('Connected').isVisible();
+  if (isConnected) {
+    const usernameLabel = contentArea.locator('span.font-medium:has-text("Username:")').first();
+    await expect(usernameLabel).toBeVisible();
+    
+    // Check that username field has a non-empty value
+    const usernameContainer = contentArea.locator('p', { hasText: 'Username:' });
+    const usernameText = await usernameContainer.textContent();
+    expect(usernameText.replace('Username:', '').trim()).not.toBe('');
+  }
+
+  // Verify no error messages are shown
+  const errorMessage = eagleEyeContainer.locator('.text-red-500');
+  await expect(errorMessage).not.toBeVisible();
 }); 

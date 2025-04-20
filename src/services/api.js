@@ -133,4 +133,15 @@ export const deviceService = {
       throw error.response?.data || error;
     }
   }
+};
+
+export const eagleEyeService = {
+  creds: async (accountId) => {
+    try {
+      const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/creds`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  }
 }; 

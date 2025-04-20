@@ -177,6 +177,32 @@
       </div>
     </div>
 
+    <!-- Eagle Eye Section -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Eagle Eye</h2>
+      <div v-if="eagleEyeLoading" class="flex justify-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+      <div v-else-if="eagleEyeError" class="text-red-500 text-center">
+        {{ eagleEyeError }}
+      </div>
+      <div v-else class="bg-gray-50 p-4 rounded-lg">
+        <div class="flex items-center">
+          <div class="flex-grow">
+            <p class="text-sm text-gray-500">
+              <span class="font-medium">Status: </span>
+              <span :class="eagleEyeCreds?.success ? 'text-green-600' : 'text-red-600'">
+                {{ eagleEyeCreds?.success ? 'Connected' : 'Not Connected' }}
+              </span>
+            </p>
+            <p v-if="eagleEyeCreds?.username" class="text-sm text-gray-500 mt-1">
+              <span class="font-medium">Username:</span> {{ eagleEyeCreds.username }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Version Display -->
     <div class="mt-8 text-center">
       <p class="text-xs text-gray-400">
@@ -197,6 +223,7 @@
 import { onMounted, ref, computed, onUnmounted } from 'vue';
 import { useDataStore } from '../stores/data';
 import { useAuthStore } from '../stores/auth';
+import { eagleEyeService } from '../services/api';
 import packageJson from '../../package.json';
 
 const version = packageJson.version;
@@ -222,6 +249,10 @@ let timer = null;
 const devices = ref([]);
 const notifications = ref([]);
 const sensors = ref([]);
+
+const eagleEyeLoading = ref(false);
+const eagleEyeError = ref(null);
+const eagleEyeCreds = ref(null);
 
 const getUnit = (unitId) => {
   const units = {
@@ -255,6 +286,7 @@ const fetchData = async () => {
   devicesError.value = null;
   sensorsError.value = null;
   notificationsError.value = null;
+  eagleEyeError.value = null;
   
   // Fetch account information
   accountLoading.value = true;
@@ -304,6 +336,18 @@ const fetchData = async () => {
     notificationsError.value = err.msg || 'Failed to fetch notifications';
   } finally {
     notificationsLoading.value = false;
+  }
+
+  // Fetch Eagle Eye credentials
+  eagleEyeLoading.value = true;
+  try {
+    const accountId = authStore.getAccountId;
+    const response = await eagleEyeService.creds(accountId);
+    eagleEyeCreds.value = response;
+  } catch (err) {
+    eagleEyeError.value = err.msg || 'Failed to fetch Eagle Eye credentials';
+  } finally {
+    eagleEyeLoading.value = false;
   }
 };
 
