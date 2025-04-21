@@ -108,11 +108,15 @@ const error = ref('');
 const loading = ref(false);
 const version = ref(getVersion());
 
-// Clear API key when component is mounted
-//onMounted(() => {
-//  authStore.apiKey = null;
-//  localStorage.removeItem('apiKey');
-//});
+onMounted(() => {
+  // Check if redirected due to expired session
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionStatus = urlParams.get('session');
+  
+  if (sessionStatus === 'expired') {
+    error.value = 'Your session has expired. Please sign in again.';
+  }
+});
 
 const login = async () => {
   if (!email.value || !password.value) {

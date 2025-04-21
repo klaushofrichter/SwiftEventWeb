@@ -39,6 +39,45 @@ api.interceptors.request.use(
   }
 );
 
+// Add response interceptor to handle expired tokens
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    const authStore = useAuthStore();
+    
+    // If we get a 403 and we haven't already tried to refresh the token
+    if (error.response?.status === 403 && !originalRequest._retry && authStore.refreshToken) {
+      originalRequest._retry = true;
+      
+      try {
+        // Try to refresh the token
+        console.log("Access token expired, attempting to refresh");
+        const tokenData = await authService.refreshToken(authStore.refreshToken);
+        
+        // Update the tokens in the store
+        authStore.setToken(tokenData.accessToken);
+        authStore.setRefreshToken(tokenData.refreshToken);
+        
+        // Update the auth header and retry the request
+        originalRequest.headers.Authorization = `Bearer ${tokenData.accessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        // If refresh fails, logout the user
+        console.error("Token refresh failed:", refreshError);
+        authStore.logout();
+        // Redirect to login page or show a session expired message
+        window.location.href = '/login?session=expired';
+        return Promise.reject(refreshError);
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 // Add request interceptor for login API to include API key
 loginApi.interceptors.request.use(
   (config) => {
