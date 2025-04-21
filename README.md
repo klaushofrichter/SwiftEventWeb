@@ -71,12 +71,12 @@ of this application is deployed via [Github Pages](https://klaushofrichter.githu
 ## Login
 
 The Swiftsensors API requires an API Key for all calls in the header of the API call. 
-The API Key related to the Account, and any user/password is bound to that API Key. 
+The API Key is related to the Account, and any user/password is bound to that API Key. 
 Account owners need to request an API Key from Swiftsensors, it will then be visible 
 in the [Swiftsensors console](https://my.swiftsensors.net/) under Admin/Accounts. 
 
 The API Key can be provided at login time, along with the email and password. It is possible
-to configure a a default API Key in the `.env` file, and subsequently in the Github repository
+to configure a a default API Key in the `.env` file, and in the Github repository
 secrets. 
 
 ## CORS handling
@@ -89,7 +89,9 @@ The application uses Vite's proxy configuration to avoid CORS issues. This shoul
 
 ### Production
 
-There is a configuration provided for [Github Pages](https://klaushofrichter.github.io/SwiftEventWeb) that uses a Cloudflare Worker proxy (cors-proxy.swiftsensors.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker proxy may or may not be active, so there is no guarantee that this would be working at any time. 
+There is a configuration provided for [Github Pages](https://klaushofrichter.github.io/SwiftEventWeb) that uses a Cloudflare Worker 
+proxy (cors-proxy.swiftsensors.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker 
+proxy may or may not be active, so there is no guarantee that this would be working at any time. 
 
 You can setup your own Github pages deployment and Cloudflare proxy: To deploy to Github pages you will need to configure your 
 Github repository appropriately, see the "Pages" tab in "Settings" for the repository. You can configure to deploy Github 
