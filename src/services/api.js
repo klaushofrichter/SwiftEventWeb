@@ -188,11 +188,9 @@ export const eagleEyeService = {
 
   getCameraImage: async (accountId, cameraId, timestamp, refresh = false) => {
     try {
-      console.log("getCameraImage", accountId, cameraId, timestamp, refresh);
       const response = await api.get(`/api/client/v1/accounts/${accountId}/eagleeye/cameras/${cameraId}/image/${timestamp}`, {
         responseType: 'arraybuffer'  // Get raw binary data
       });
-      console.log("getCameraImage response", response);
 
       // Convert array buffer to base64
       const base64 = btoa(
