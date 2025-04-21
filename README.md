@@ -76,7 +76,7 @@ Account owners need to request an API Key from Swiftsensors, it will then be vis
 in the [Swiftsensors console](https://my.swiftsensors.net/) under Admin/Accounts. 
 
 The API Key can be provided at login time, along with the email and password. It is possible
-to configure a a default API Key in the `.env` file, and in the Github repository
+to configure a default API Key in the `.env` file, and in the Github repository
 secrets. 
 
 ## CORS handling
