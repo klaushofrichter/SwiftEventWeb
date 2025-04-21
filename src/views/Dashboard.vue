@@ -668,7 +668,7 @@ const showCameraDetails = async (camera, timestamp = null) => {
     const base64Data = await eagleEyeService.getCameraImage(
       authStore.getAccountId,
       camera.id,
-      currentTimestamp
+      currentTimestamp * 1000  // Convert to milliseconds
     );
     
     cameraImageBase64.value = base64Data;
