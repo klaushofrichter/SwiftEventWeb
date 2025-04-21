@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # This script is used to test the API - it performs a CURL sign-in and prints the 
-# result reading the .env for configuration.
+# result reading the .env for configuration. Then it refershes the token, and finally
+
 #
 
 # 
