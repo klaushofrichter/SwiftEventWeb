@@ -1,6 +1,6 @@
 # SwiftSensors Web Application
 
-A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended for as a technology 
+A Vue 3 web application for viewing a SwiftSensors account and its sensors. This is intended as a technology 
 demonstration. The application runs on desktop browsers, tablet and mobile. The application was build with 
 [Cursor](https://Cursor.com) (Claude-3.7-Sonnet) on MacOS 15.4 and Windows 11. The application is using
 the [SwiftSensors public API](https://my.swiftsensors.net/api-docs), but has other than that 
