@@ -48,8 +48,10 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const authStore = useAuthStore();
     
-    // If we get a 403 and we haven't already tried to refresh the token
-    if (error.response?.status === 403 && !originalRequest._retry && authStore.refreshToken) {
+    // If we get a 401 or 403 and we haven't already tried to refresh the token
+    if ((error.response?.status === 401 || error.response?.status === 403) && 
+        !originalRequest._retry && 
+        authStore.refreshToken) {
       originalRequest._retry = true;
       
       try {
