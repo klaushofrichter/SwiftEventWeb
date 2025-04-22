@@ -19,7 +19,7 @@ of this application is deployed via [Github Pages](https://klaushofrichter.githu
 - **Login with email, password and optional API Key**
   - Overwriting of the default API Key at login time 
   - Local storage of credentials until explict logout
-  - Automatic access token refresh
+  - Automatic access token refresh 
 
 - **Account Information Viewing**
   - View account details, including account timezone and account creation time

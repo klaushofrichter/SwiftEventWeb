@@ -179,6 +179,16 @@ export const useAuthStore = defineStore('auth', {
           this.startRefreshTimer();
         }
       }
+    },
+
+    setToken(token) {
+      this.token = token;
+      localStorage.setItem('token', token);
+    },
+
+    setRefreshToken(refreshToken) {
+      this.refreshToken = refreshToken;
+      localStorage.setItem('refreshToken', refreshToken);
     }
   }
 }); 
