@@ -90,7 +90,7 @@ The application uses Vite's proxy configuration to avoid CORS issues. This shoul
 ### Production
 
 There is a configuration provided for [Github Pages](https://klaushofrichter.github.io/SwiftEventWeb) that uses a Cloudflare Worker 
-proxy (cors-proxy.swiftsensors.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker 
+proxy (cors-proxy.klaushofrichter.workers.dev) for all API calls. Both the Github Pages deployment and the Cloudflare worker 
 proxy may or may not be active, so there is no guarantee that this would be working at any time. 
 
 You can setup your own Github pages deployment and Cloudflare proxy: To deploy to Github pages you will need to configure your 
@@ -185,7 +185,7 @@ This allows Github Pages to operate.
    VITE_SWIFT_SENSORS_API_KEY=your-api-key
    VITE_SWIFT_SENSORS_API_HOST="https://api.swiftsensors.net"
    VITE_SWIFT_SENSORS_PROXY_API_URL="/proxy" # for local execution only
-   VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.swiftsensors.workers.dev/proxy" # for use with cloudflare proxy / production
+   VITE_SWIFT_SENSORS_PROD_PROXY_API_URL="https://cors-proxy.klaushofrichter.workers.dev/proxy" # for use with cloudflare proxy / production
    VITE_SWIFT_SENSORS_PROD_APP_DOMAIN="klaushofrichter.github.io" # for production, needs to be adopted to your domain 
    VITE_SWIFT_SENSORS_USER=your-email-address  # optional 
    VITE_SWIFT_SENSORS_PASSWORD=your-password   # optional
