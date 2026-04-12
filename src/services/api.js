@@ -56,7 +56,6 @@ api.interceptors.response.use(
       
       try {
         // Try to refresh the token
-        console.log("Access token expired, attempting to refresh");
         const tokenData = await authService.refreshToken(authStore.refreshToken);
         
         // Update the tokens in the store
@@ -68,10 +67,8 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         // If refresh fails, logout the user
-        console.error("Token refresh failed:", refreshError);
         authStore.logout();
-        // Redirect to login page or show a session expired message
-        window.location.href = '/login?session=expired';
+        window.location.hash = '#/login?session=expired';
         return Promise.reject(refreshError);
       }
     }
@@ -85,7 +82,6 @@ loginApi.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
     config.headers['X-API-Key'] = authStore.getApiKey;
-    //console.log("loginApi config", config);
     return config;
   },
   (error) => {
@@ -233,11 +229,13 @@ export const eagleEyeService = {
         responseType: 'arraybuffer'  // Get raw binary data
       });
 
-      // Convert array buffer to base64
-      const base64 = btoa(
-        new Uint8Array(response.data)
-          .reduce((data, byte) => data + String.fromCharCode(byte), '')
-      );
+      // Convert array buffer to base64 using chunks to avoid O(n^2) string concatenation
+      const bytes = new Uint8Array(response.data);
+      const chunks = [];
+      for (let i = 0; i < bytes.length; i += 8192) {
+        chunks.push(String.fromCharCode(...bytes.subarray(i, i + 8192)));
+      }
+      const base64 = btoa(chunks.join(''));
 
       return base64;  // Return base64 string directly
     } catch (error) {
