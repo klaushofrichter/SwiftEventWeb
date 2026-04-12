@@ -72,8 +72,8 @@ test('login and verify dashboard', async ({ page }) => {
   await updateButton.click();
   await updateButton.waitFor({ state: 'visible', timeout: 30000 });
 
-  // Verify loading states are not present
-  await expect(page.locator('text=Loading...')).not.toBeVisible();
+  // Verify main section loading spinners are not present
+  await expect(page.locator('.animate-spin')).not.toBeVisible();
 });
 
 test('verify login error handling', async ({ page }) => {

@@ -81,7 +81,6 @@ export const useAuthStore = defineStore('auth', {
       }
 
       try {
-        //console.log('Refreshing access token');
         const response = await authService.refreshToken(this.refreshToken);
         this.token = response.access_token;
         this.refreshToken = response.refresh_token;
@@ -91,7 +90,6 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', response.access_token);
         localStorage.setItem('refreshToken', response.refresh_token);
         localStorage.setItem('tokenExpiresAt', this.tokenExpiresAt.toString());
-        //console.log('Access token refreshed successfully');
 
         // Restart refresh timer
         this.startRefreshTimer();
@@ -111,16 +109,13 @@ export const useAuthStore = defineStore('auth', {
     },
 
     startRefreshTimer() {
-
       // Clear any existing timer
       if (this.refreshTimer) {
         clearTimeout(this.refreshTimer);
       }
 
       // Calculate time until refresh (1 hour before expiration)
-      const timeUntilRefresh = this.tokenExpiresAt - Date.now() - (60 * 60 * 1000); // 1 hour in milliseconds
-      //const timeUntilRefresh = (1 * 60 * 1000); // 1 minute for testing in milliseconds
-      //console.log('Time until refresh:', timeUntilRefresh);
+      const timeUntilRefresh = this.tokenExpiresAt - Date.now() - (60 * 60 * 1000);
 
       if (timeUntilRefresh > 0) {
         this.refreshTimer = setTimeout(() => {
@@ -156,6 +151,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     initialize() {
+      if (this.token) return;
       const token = localStorage.getItem('token');
       const refreshToken = localStorage.getItem('refreshToken');
       const accountId = localStorage.getItem('accountId');

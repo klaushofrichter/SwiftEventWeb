@@ -83,7 +83,7 @@
           </div>
           <div class="mt-4">
             <div class="flex items-baseline">
-              <span class="text-2xl font-semibold text-gray-700">{{ formatSensorValue(sensor[6]) }}</span>
+              <span class="text-2xl font-semibold text-gray-700">{{ formatSensorValue(sensor[6], sensor[3]) }}</span>
               <span class="ml-1 text-gray-500">{{ getUnit(sensor[3]) }}</span>
             </div>
             <p class="text-xs text-gray-500 mt-1">Updated: {{ formatDate(sensor[4]) }}</p>
@@ -450,13 +450,12 @@ const formatDate = (timestamp) => {
   return new Date(timestamp * 1000).toLocaleString();
 };
 
-const formatSensorValue = (value) => {
+const formatSensorValue = (value, unitId) => {
+  if (unitId === 17) {
+    return value === 1 ? 'Open' : 'Closed';
+  }
   if (typeof value === 'number' && !Number.isInteger(value)) {
     return value.toFixed(2);
-  }
-  // For door sensors
-  if (value === 0 || value === 1) {
-    return value === 1 ? 'Open' : 'Closed';
   }
   return value;
 };
@@ -485,95 +484,78 @@ const fetchData = async () => {
   sensorsError.value = null;
   notificationsError.value = null;
   eagleEyeError.value = null;
-  
-  // Fetch account information
+
+  // Set all loading states
   accountLoading.value = true;
-  try {
-    await dataStore.fetchAccountInfo();
-  } catch (err) {
-    accountError.value = err.msg || 'Failed to fetch account information';
-  } finally {
-    accountLoading.value = false;
-  }
-
-  // Fetch devices
   devicesLoading.value = true;
-  try {
-    await dataStore.fetchDevices();
-    devices.value = dataStore.devices;
-  } catch (err) {
-    if(err.msg === 'Permission Denied') {
-      devicesError.value = 'Your account may not be authorized to access this data';
-    } else {
-      devicesError.value = err.msg || 'Failed to fetch devices';
-    }
-  } finally {
-    devicesLoading.value = false;
-  }
-
-  // Fetch sensors
   sensorsLoading.value = true;
-  try {
-    await dataStore.fetchSensors();
-    sensors.value = dataStore.sensors;
-    
-    // Fetch details for each sensor
-    const fetchPromises = sensors.value.map(sensor => 
-      fetchSensorDetails(authStore.getAccountId, sensor[0])
-    );
-    await Promise.all(fetchPromises);
-    
-    // Set lastUpdateTime when sensors are first loaded
-    lastUpdateTime.value = Date.now();
-    updateElapsedTime();
-  } catch (err) {
-    sensorsError.value = err.msg || 'Failed to fetch sensors';
-  } finally {
-    sensorsLoading.value = false;
-  }
-
-  // Fetch notifications
   notificationsLoading.value = true;
-  try {
-    await dataStore.fetchNotifications();
-    notifications.value = dataStore.notifications;
-  } catch (err) {
-    notificationsError.value = err.msg || 'Failed to fetch notifications';
-  } finally {
-    notificationsLoading.value = false;
-  }
-
-  // Fetch Eagle Eye credentials
   eagleEyeLoading.value = true;
-  try {
-    const accountId = authStore.getAccountId;
-    const response = await eagleEyeService.creds(accountId);
-    eagleEyeCreds.value = response;
-    
-    // Test the credentials if they exist
-    if (response.username) {
-      const testResponse = await eagleEyeService.testCreds(accountId);
-      eagleEyeTestResult.value = testResponse;
-      
-      // Fetch cameras if credentials are valid
-      if (testResponse.success) {
-        await dataStore.fetchEagleEyeCameras();
-        eagleEyeCameras.value = dataStore.getEagleEyeCameras;
+
+  // Run independent fetches in parallel
+  await Promise.allSettled([
+    // Account
+    dataStore.fetchAccountInfo()
+      .catch(err => { accountError.value = err.msg || 'Failed to fetch account information'; })
+      .finally(() => { accountLoading.value = false; }),
+
+    // Devices
+    dataStore.fetchDevices()
+      .then(() => { devices.value = dataStore.devices; })
+      .catch(err => {
+        devicesError.value = err.msg === 'Permission Denied'
+          ? 'Your account may not be authorized to access this data'
+          : err.msg || 'Failed to fetch devices';
+      })
+      .finally(() => { devicesLoading.value = false; }),
+
+    // Sensors + details
+    dataStore.fetchSensors()
+      .then(async () => {
+        sensors.value = dataStore.sensors;
+        await Promise.all(sensors.value.map(sensor =>
+          fetchSensorDetails(authStore.getAccountId, sensor[0])
+        ));
+        lastUpdateTime.value = Date.now();
+        updateElapsedTime();
+      })
+      .catch(err => { sensorsError.value = err.msg || 'Failed to fetch sensors'; })
+      .finally(() => { sensorsLoading.value = false; }),
+
+    // Notifications
+    dataStore.fetchNotifications()
+      .then(() => { notifications.value = dataStore.notifications; })
+      .catch(err => { notificationsError.value = err.msg || 'Failed to fetch notifications'; })
+      .finally(() => { notificationsLoading.value = false; }),
+
+    // Eagle Eye (creds -> test -> cameras is a sequential chain)
+    (async () => {
+      const accountId = authStore.getAccountId;
+      const response = await eagleEyeService.creds(accountId);
+      eagleEyeCreds.value = response;
+      if (response.username) {
+        const testResponse = await eagleEyeService.testCreds(accountId);
+        eagleEyeTestResult.value = testResponse;
+        if (testResponse.success) {
+          await dataStore.fetchEagleEyeCameras();
+          eagleEyeCameras.value = dataStore.eagleEyeCameras;
+        }
       }
-    }
-  } catch (err) {
-    eagleEyeError.value = err.msg || 'Failed to fetch Eagle Eye credentials';
-  } finally {
-    eagleEyeLoading.value = false;
-  }
+    })()
+      .catch(err => { eagleEyeError.value = err.msg || 'Failed to fetch Eagle Eye credentials'; })
+      .finally(() => { eagleEyeLoading.value = false; })
+  ]);
 };
 
+let savedBodyOverflow = '';
+
 const disableBodyScroll = () => {
+  savedBodyOverflow = document.body.style.overflow;
   document.body.style.overflow = 'hidden';
 };
 
 const enableBodyScroll = () => {
-  document.body.style.overflow = 'auto';
+  document.body.style.overflow = savedBodyOverflow;
 };
 
 const showNotificationDetails = async (notificationId) => {
@@ -602,18 +584,21 @@ const updateElapsedTime = () => {
   const diff = now - lastUpdateTime.value;
   const seconds = Math.floor(diff / 1000);
   
+  let newText;
   if (seconds < 10) {
-    elapsedTime.value = 'just now';
+    newText = 'just now';
   } else if (seconds < 60) {
-    // Round to nearest 10 seconds
     const roundedSeconds = Math.round(seconds / 10) * 10;
-    elapsedTime.value = `about ${roundedSeconds} seconds ago`;
+    newText = `about ${roundedSeconds} seconds ago`;
   } else if (seconds < 3600) {
     const minutes = Math.floor(seconds / 60);
-    elapsedTime.value = `about ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    newText = `about ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
   } else {
     const hours = Math.floor(seconds / 3600);
-    elapsedTime.value = `about ${hours} hour${hours > 1 ? 's' : ''} ago`;
+    newText = `about ${hours} hour${hours > 1 ? 's' : ''} ago`;
+  }
+  if (newText !== elapsedTime.value) {
+    elapsedTime.value = newText;
   }
 };
 
@@ -698,7 +683,6 @@ const testSelectedNotification = async () => {
     // or in the id property for detail view
     const notificationId = selectedNotification.value.id || selectedNotification.value[0];
     
-    //console.log("Testing notification", notificationId);
     await notificationService.testNotification(
       authStore.getAccountId,
       notificationId
