@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.7.2",
-    "axios": "^1.6.7",
+    "axios": "^1.20.0",
     "dotenv": "^16.4.7",
     "gh-pages": "^6.3.0",
     "pinia": "^2.1.7",
-    "playwright": "^1.51.1",
-    "vue": "^3.4.15",
+    "playwright": "^1.63.0",
+    "vue": "^3.5.42",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
