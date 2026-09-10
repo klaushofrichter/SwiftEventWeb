@@ -153,7 +153,7 @@ This allows Github Pages to operate.
 
 ## Development and Deployment Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js v22 or higher (Vite 8 requires >= 20.19)
 - npm or yarn
 - SwiftSensors API access (API key required)
 

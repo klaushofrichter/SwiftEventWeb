@@ -16,21 +16,21 @@
     "test": "playwright test --project=chromium"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@vueuse/core": "^10.7.2",
-    "axios": "^1.6.7",
+    "axios": "^1.20.0",
     "dotenv": "^16.4.7",
     "gh-pages": "^6.3.0",
-    "pinia": "^2.1.7",
-    "playwright": "^1.51.1",
-    "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "pinia": "^4.0.3",
+    "playwright": "^1.63.0",
+    "vue": "^3.5.42",
+    "vue-router": "^5.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.42.1",
-    "@vitejs/plugin-vue": "^5.0.3",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "vite": "^5.0.12"
+    "@playwright/test": "^1.63.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.0"
   }
 }

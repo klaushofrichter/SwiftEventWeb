@@ -4,7 +4,7 @@
       <div class="max-w-7xl mx-auto px-4">
         <div class="flex justify-between h-16">
           <div class="flex">
-            <div class="flex-shrink-0 flex items-center">
+            <div class="shrink-0 flex items-center">
               <h1 class="text-xl font-bold text-gray-800">SwiftSensors Dashboard</h1>
             </div>
           </div>
