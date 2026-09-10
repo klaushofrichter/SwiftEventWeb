@@ -23,16 +23,15 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const authStore = useAuthStore();
   authStore.initialize();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login');
-  } else if (to.path === '/login' && authStore.isAuthenticated) {
-    next('/dashboard');
-  } else {
-    next();
+    return '/login';
+  }
+  if (to.path === '/login' && authStore.isAuthenticated) {
+    return '/dashboard';
   }
 });
 

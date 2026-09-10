@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Account Information Section -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow-sm rounded-lg p-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Account Information</h2>
       <div v-if="accountLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow-sm rounded-lg p-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Devices</h2>
       <div v-if="devicesLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow-sm rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-900">Metrics</h2>
         <div class="flex items-center space-x-4">
@@ -48,7 +48,7 @@
           </span>
           <button
             @click="refreshSensors"
-            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
             :disabled="sensorsLoading"
             title="Refresh the metrics with the current measurements"
           >
@@ -104,7 +104,7 @@
                   :href="getEagleEyeHistoryUrl(sensorDetails[sensor[0]].eeCameraIds, sensor[4])"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                  class="px-2 py-1 text-xs bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition-colors"
                   title="See the camera in the Eagle Eye Application"
                 >
                   View with EEN
@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow-sm rounded-lg p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-900">Notification Settings</h2>
       </div>
@@ -168,7 +168,7 @@
     <!-- Notification Details Modal -->
     <div
       v-if="selectedNotification"
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
+      class="fixed inset-0 bg-gray-500/75 flex items-center justify-center"
       @click="closeModal"
     >
       <div
@@ -197,7 +197,7 @@
                 <button
                   @click="testSelectedNotification"
                   :disabled="notificationTestLoading"
-                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 >
                   <span v-if="notificationTestLoading" class="inline-flex items-center">
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -234,7 +234,7 @@
     </div>
 
     <!-- Eagle Eye Section -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow-sm rounded-lg p-6">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Eagle Eye</h2>
       <div v-if="eagleEyeLoading" class="flex justify-center">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -245,7 +245,7 @@
       <div v-else class="space-y-4">
         <div class="bg-gray-50 p-4 rounded-lg">
           <div class="flex items-center">
-            <div class="flex-grow">
+            <div class="grow">
               <p class="text-sm text-gray-500">
                 <span class="font-medium">Status: </span>
                 <span :class="eagleEyeCreds?.success ? 'text-green-600' : 'text-red-600'">
@@ -285,7 +285,7 @@
               :href="getEagleEyeHistoryUrl(eagleEyeCameras.slice(0, 4).map(cam => cam.id), Math.floor(Date.now() / 1000))"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition-colors"
               title="Use the Eagle Eye Application for viewing the cameras"
             >
               {{ eagleEyeCameras.length <= 4 ? 'View all cameras with EEN' : 'View the first four cameras with EEN' }}
@@ -298,7 +298,7 @@
     <!-- Camera Details Modal -->
     <div
       v-if="selectedCamera"
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
+      class="fixed inset-0 bg-gray-500/75 flex items-center justify-center"
       @click="closeCameraModal"
     >
       <div
@@ -330,7 +330,7 @@
               :href="getEagleEyeHistoryUrl([selectedCamera.id], imageTimestamp)"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              class="inline-block px-3 py-1.5 text-sm bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition-colors"
               title="See the camera in the Eagle Eye Application"
             >
               View with EEN
@@ -349,7 +349,7 @@
               <p class="text-red-500">{{ cameraImageError }}</p>
               <button
                 @click="showCameraDetails(selectedCamera)"
-                class="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                class="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-sm hover:bg-blue-200"
               >
                 Try Again
               </button>
