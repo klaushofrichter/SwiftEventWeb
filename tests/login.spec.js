@@ -254,7 +254,7 @@ test('verify Eagle Eye section on dashboard', async ({ page }) => {
   await page.waitForSelector('.animate-spin', { state: 'detached', timeout: 10000 });
 
   // Find the Eagle Eye section container and its content area
-  const eagleEyeContainer = page.locator('div.bg-white.shadow.rounded-lg.p-6').filter({ hasText: 'Eagle Eye' });
+  const eagleEyeContainer = page.locator('div.bg-white.shadow-sm.rounded-lg.p-6').filter({ hasText: 'Eagle Eye' });
   const contentArea = eagleEyeContainer.locator('div.bg-gray-50.p-4.rounded-lg');
 
   // Verify Status field exists and has a value
